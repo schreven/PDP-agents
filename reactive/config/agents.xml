@@ -9,5 +9,10 @@
 		<set class-name="template.ReactiveTemplate"/>
 		<set discount-factor=".85"/>
 	</agent>
-	
+	<agent name="reactive-rla">
+		<set class-path="bin/"></set>
+		<set class-name="solution.ReactiveSolution"></set>
+		<set discount-factor=".85"></set>
+	</agent>
+
 </agents>
