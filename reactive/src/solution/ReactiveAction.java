@@ -19,7 +19,7 @@ public class ReactiveAction {
 		return action;
 	}
 	
-	public City getDest() {
+	public City getDestinationCity() {
 		return dest;
 	}
 	

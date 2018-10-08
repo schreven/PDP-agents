@@ -24,7 +24,7 @@ public class ReactiveState {
 		return currentCity;
 	}
 	
-	public boolean taskAvailible() {
+	public boolean taskAvailable() {
 		return taskAvailable;
 	}
 	

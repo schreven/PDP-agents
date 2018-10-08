@@ -1,6 +1,5 @@
 package solution;
 
-import java.util.Random;
 import java.util.Map;
 import java.util.HashMap;
 import java.util.ArrayList;
@@ -18,7 +17,6 @@ import logist.topology.Topology.City;
 
 public class ReactiveSolution implements ReactiveBehavior {
 
-	private Random random;
 	private double discountFactor;
 	private int numActions;
 	private Agent myAgent;
@@ -26,16 +24,29 @@ public class ReactiveSolution implements ReactiveBehavior {
 	
 	private ArrayList<ReactiveState> stateList;											// List of all the states
 	private Map<ReactiveState, ArrayList<ReactiveAction>> possibleActions;				// Each state has a list of possible actions from this particular state
+	private Map<City, ArrayList<ReactiveState>> statesInCity;							// List of different states in each city
+	private Map<ReactiveState, ReactiveAction> strategy;								// Best action to take in state S
 	private int costKm;																	// cost per km of the vehicle
 	
-	private Map<Integer, Double> Vlist;
-	private Map<Integer, Integer> Best;
-	
-	private class MaxV {
-		double v;
-		int a;
+	// class to return result of findMaxQ function
+	public class BestResult {
+		private final double v;
+		private final ReactiveAction action;
+		
+		public BestResult(double v, ReactiveAction action) {
+			this.v = v;
+			this.action = action;
+		}
+		
+		double getV() {
+			return v;
+		}
+		
+		ReactiveAction getAction() {
+			return action;
+		}
 	}
-	
+		
 	@Override
 	public void setup(Topology topology, TaskDistribution td, Agent agent) {
 
@@ -44,7 +55,6 @@ public class ReactiveSolution implements ReactiveBehavior {
 		Double discount = agent.readProperty("discount-factor", Double.class,
 				0.95);
 
-		this.random = new Random();
 		this.discountFactor = discount;
 		this.numActions = 0;
 		this.myAgent = agent;
@@ -52,27 +62,40 @@ public class ReactiveSolution implements ReactiveBehavior {
 		this.costKm = agent.vehicles().get(0).costPerKm();								// find the cost per km of the agent
 		this.stateList = new ArrayList<ReactiveState>();
 		this.possibleActions = new HashMap<ReactiveState, ArrayList<ReactiveAction>>();
+		this.statesInCity = new HashMap<City, ArrayList<ReactiveState>>();	
+		this.strategy = new HashMap<ReactiveState, ReactiveAction>();	
+
+		this.stoppingCriterion = 0.05;
 		
-		this.Vlist = new HashMap<Integer, Double>();
-		this.Best = new HashMap<Integer, Integer>();
-		this.stoppingCriterion = 0.01;
+		LearnStrategy(topology, td);	
 		
-		LearnStrategy(topology, td);		
+		/*
+		for (Map.Entry<ReactiveState, ReactiveAction> entry : strategy.entrySet()) {
+			System.out.println(entry.getKey().getCurrentCity());
+			System.out.println(entry.getKey().taskAvailable());
+		}*/
+		
 	}
 
 	@Override
 	public Action act(Vehicle vehicle, Task availableTask) {
-		Action action;
-		City currentCity = vehicle.getCurrentCity();	
-		int bestTask =  stateList.get(currentCity.id);
+		Action action;		
+		City currentCity = vehicle.getCurrentCity();
 		
-		if (availableTask != null && availableTask.deliveryCity.id == bestTask) {
+		/* Identify current state (comparison with the list) */
+		ReactiveState currentState = FindState(currentCity, availableTask);
+				
+		/* Find out what to do */
+		ReactiveAction bestAction = strategy.get(currentState);
+		
+		if (bestAction.getAction()) {				// Pickup
 			action = new Pickup(availableTask);
 		}
-		else {
-			action = new Move(currentCity.randomNeighbor(random));
+		else {										// Move
+			action = new Move(bestAction.getDestinationCity());
 		}
 		
+		/* Output */
 		if (numActions >= 1) {
 			System.out.println("The total profit after "+numActions+" actions is "+myAgent.getTotalProfit()+" (average profit: "+(myAgent.getTotalProfit() / (double)numActions)+")");
 		}
@@ -85,12 +108,15 @@ public class ReactiveSolution implements ReactiveBehavior {
 		
 		/* Populate States */
 		for (City city : topology) {
-			stateList.add(new ReactiveState(city));								// States where there is no task available in the city
+			ArrayList<ReactiveState> cityStates = new ArrayList<ReactiveState>();
+			cityStates.add(new ReactiveState(city));							// States where there is no task available in the city
 			
 			for (City dest : topology) {
 				if (city.id == dest.id) continue;								// Origin city and destination city cannot be the same
-				stateList.add(new ReactiveState(city, dest));					// States where there is a task to city dest
+				cityStates.add(new ReactiveState(city, dest));					// States where there is a task to city dest
 			}
+			stateList.addAll(cityStates);
+			statesInCity.put(city, cityStates);
 		}
 		
 		/* Find all different state-action couples and compute R(s,a)*/
@@ -106,7 +132,7 @@ public class ReactiveSolution implements ReactiveBehavior {
 				actionList.add(action);
 			}	
 			
-			if (state.taskAvailible()) {										// When there is a task
+			if (state.taskAvailable()) {										// When there is a task
 				for (City dest : topology) {
 					if (city.id == dest.id) continue;
 					ReactiveAction action = new ReactiveAction(true, dest);
@@ -119,77 +145,90 @@ public class ReactiveSolution implements ReactiveBehavior {
 			possibleActions.put(state, actionList);								// add all possible actions for each state
 		}
 		
-		
-		// TODO: IMPLEMENT V(S) AND BEST(S) COMPUTATION
-		
-		
-		/* OLD SOLUTION
-		Map<Integer, Double> previousV = new HashMap<Integer, Double>();
-		// Initialize V values
-		for (City city : topology) {
-			Vlist.put(city.id, 1.0);
-			previousV.put(city.id, 0.0);
-		}		
-		
-		// Compute V values
-			
-		while (findMaxDiff(Vlist, previousV) > stoppingCriterion) {
-			previousV = new HashMap<Integer, Double>(Vlist);
-			computeV(topology, td);		
+		/* Initialize V values arbitrarily*/
+		Map<ReactiveState, Double> Vvalues = new HashMap<ReactiveState, Double>();
+		Map<ReactiveState, Double> NewVvalues = new HashMap<ReactiveState, Double>();
+		for (ReactiveState state : stateList) {
+			Vvalues.put(state, 1.0);
 		}
 		
-		// Iterate over all cities
-		// Agent accepts only tasks going to Best city
-		for (City city : topology) {
-			stateList.put(city.id, Best.get(city.id));			
-		}	*/
-		
-	}
-	
-	/* OLD SOLUTION
-	public void computeV(Topology topology, TaskDistribution td) {
-		
-		// Iterate over all cities
-		for (City cityA : topology) {			
-			Map<Integer, Double> Qlist = new HashMap<Integer, Double>();
-			
-			for (City cityB : topology) {
-				if (cityA.id == cityB.id) continue;				
-				double reward = td.reward(cityA, cityB);	
-				// the sum is simplified because in state S, action A gives reward only if we go to S' ??? not sure
-				Qlist.put(cityB.id, reward+discountFactor*td.probability(cityA, cityB)*Vlist.get(cityB.id));	
+		/* Compute V(s) and Best(s) */
+		boolean done = false;
+		while (!done) {
+			for (ReactiveState state : possibleActions.keySet()) {					// Iterate over states
+				Map<ReactiveAction, Double> Qvalues = new HashMap<ReactiveAction, Double>();
+							
+				for (ReactiveAction action : possibleActions.get(state)) {			// Iterate over possible actions of the state
+					double sum = 0.0;
+					City dest = action.getDestinationCity();		
+					
+				    // action A is to go from the city of state S to the destination city in S'. T(s,a,s') = 0 for all the other cities.
+					// In the destination city, the possible states are either taskAvailible = 0, or a task to a next city.
+					// Thus, T(s,a,s') is linked to the probability to have a task available in S':
+					
+					/* Compute Q(s,a) */
+					for (ReactiveState state_ : statesInCity.get(dest)) {			// Iterate over all states in destination city
+						
+						sum += td.probability(state_.getCurrentCity(), state_.getDestinationCity()) * Vvalues.get(state_);
+					}				
+					double q = action.getReward() + discountFactor * sum;			
+					Qvalues.put(action, q);							
+				}	
+				
+				/* Compute Best(s) and V(s) */
+				BestResult result = findMaxQ(Qvalues);			
+				NewVvalues.put(state, result.getV());
+				strategy.put(state, result.getAction());	
+				
 			}
 			
-			MaxV maxv = findMax(Qlist);
-						
-			Vlist.put(cityA.id, maxv.v);
-			Best.put(cityA.id, maxv.a);	
-		}
+			/* Stopping criterion */
+			double diff = findMaxDiff(Vvalues, NewVvalues);
+			if (diff < stoppingCriterion) done = true;
+			Vvalues = new HashMap<ReactiveState, Double>(NewVvalues);				// Update V values		
+		}			
 	}
 	
-	public MaxV findMax(Map<Integer, Double> map) {
-		MaxV result = new MaxV();
-		result.v = 0.0;
+	public BestResult findMaxQ(Map<ReactiveAction, Double> Qvalues) {
 		
-		for(int key : map.keySet())
-		    if (map.get(key) > result.v) {
-		    	result.v = map.get(key);
-		    	result.a = key;
-		    }
+		double bestV = 0.0;
+		ReactiveAction bestAction = new ReactiveAction(false, null);
 		
-		return result;
-	}
-	
-	public double findMaxDiff(Map<Integer, Double> mapA, Map<Integer, Double> mapB) {
-		double maxDiff = 0.0;
-
-		for (int key : mapA.keySet()) {
-			double diff = Math.abs(mapA.get(key) - mapB.get(key));
-			if (diff > maxDiff) maxDiff = diff;
+		for (Map.Entry<ReactiveAction, Double> entry : Qvalues.entrySet()) {
+			if (entry.getValue() > bestV) {
+				bestV = entry.getValue();
+				bestAction = entry.getKey();
+			}
 		}		
 		
-		return maxDiff;
-	}*/
+		return new BestResult(bestV, bestAction);
+	}
 	
+	public double findMaxDiff(Map<ReactiveState, Double> oldV, Map<ReactiveState, Double> newV) {
+		double maxDiff = -1.0;
+
+		for (ReactiveState key : oldV.keySet()) {
+			double diff = Math.abs(oldV.get(key) - newV.get(key));
+			if (diff > maxDiff) maxDiff = diff;
+		}
+		return maxDiff;
+	}
+	
+	public ReactiveState FindState(City currentCity, Task currentTask) {
+		
+		for (ReactiveState state : stateList) {
+			
+			if (state.getCurrentCity().id == currentCity.id) {											// find same city
+				if (currentTask == null) {
+					if (state.taskAvailable() == false) return state;									// no task
+				}
+				else if (state.getDestinationCity() != null) {
+					if (state.getDestinationCity().id == currentTask.deliveryCity.id) return state;		// found same task
+				}
+			}			
+		}		
+
+		return null;																					// should never go here
+	}
 	
 }
