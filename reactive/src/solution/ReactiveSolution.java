@@ -3,6 +3,7 @@ package solution;
 import java.util.Random;
 import java.util.Map;
 import java.util.HashMap;
+import java.util.ArrayList;
 
 import logist.simulation.Vehicle;
 import logist.agent.Agent;
@@ -23,8 +24,10 @@ public class ReactiveSolution implements ReactiveBehavior {
 	private Agent myAgent;
 	private double stoppingCriterion;
 	
-	// State dictionary where the integer is a unique city id and the corresponding Action, the optimal action to do
-	private Map<Integer, Integer> stateList;
+	private ArrayList<ReactiveState> stateList;											// List of all the states
+	private Map<ReactiveState, ArrayList<ReactiveAction>> possibleActions;				// Each state has a list of possible actions from this particular state
+	private int costKm;																	// cost per km of the vehicle
+	
 	private Map<Integer, Double> Vlist;
 	private Map<Integer, Integer> Best;
 	
@@ -46,7 +49,10 @@ public class ReactiveSolution implements ReactiveBehavior {
 		this.numActions = 0;
 		this.myAgent = agent;
 		
-		this.stateList = new HashMap<Integer, Integer>();
+		this.costKm = agent.vehicles().get(0).costPerKm();								// find the cost per km of the agent
+		this.stateList = new ArrayList<ReactiveState>();
+		this.possibleActions = new HashMap<ReactiveState, ArrayList<ReactiveAction>>();
+		
 		this.Vlist = new HashMap<Integer, Double>();
 		this.Best = new HashMap<Integer, Integer>();
 		this.stoppingCriterion = 0.01;
@@ -75,9 +81,50 @@ public class ReactiveSolution implements ReactiveBehavior {
 		return action;
 	}	
 			
-	public void LearnStrategy(Topology topology, TaskDistribution td) {
-		Map<Integer, Double> previousV = new HashMap<Integer, Double>();	
+	public void LearnStrategy(Topology topology, TaskDistribution td) {		
 		
+		/* Populate States */
+		for (City city : topology) {
+			stateList.add(new ReactiveState(city));								// States where there is no task available in the city
+			
+			for (City dest : topology) {
+				if (city.id == dest.id) continue;								// Origin city and destination city cannot be the same
+				stateList.add(new ReactiveState(city, dest));					// States where there is a task to city dest
+			}
+		}
+		
+		/* Find all different state-action couples and compute R(s,a)*/
+		double cost = 0.0;
+		for (ReactiveState state : stateList) {
+			City city = state.getCurrentCity();
+			ArrayList<ReactiveAction> actionList = new ArrayList<ReactiveAction>();
+			
+			for (City neighbor : city.neighbors()) {							// When there is no task, move to every neighbors
+				ReactiveAction action = new ReactiveAction(false, neighbor);
+				cost = -(double)costKm*city.distanceTo(neighbor);
+				action.setReward(cost);											// save R(s,a)
+				actionList.add(action);
+			}	
+			
+			if (state.taskAvailible()) {										// When there is a task
+				for (City dest : topology) {
+					if (city.id == dest.id) continue;
+					ReactiveAction action = new ReactiveAction(true, dest);
+					cost = -(double)costKm*city.distanceTo(dest);
+					action.setReward((double)td.reward(city, dest) + cost);		// save R(s,a)
+					actionList.add(action);
+				}				
+			}
+			
+			possibleActions.put(state, actionList);								// add all possible actions for each state
+		}
+		
+		
+		// TODO: IMPLEMENT V(S) AND BEST(S) COMPUTATION
+		
+		
+		/* OLD SOLUTION
+		Map<Integer, Double> previousV = new HashMap<Integer, Double>();
 		// Initialize V values
 		for (City city : topology) {
 			Vlist.put(city.id, 1.0);
@@ -89,17 +136,17 @@ public class ReactiveSolution implements ReactiveBehavior {
 		while (findMaxDiff(Vlist, previousV) > stoppingCriterion) {
 			previousV = new HashMap<Integer, Double>(Vlist);
 			computeV(topology, td);		
-			System.out.println(findMaxDiff(Vlist, previousV));
 		}
 		
 		// Iterate over all cities
 		// Agent accepts only tasks going to Best city
 		for (City city : topology) {
 			stateList.put(city.id, Best.get(city.id));			
-		}	
+		}	*/
 		
 	}
 	
+	/* OLD SOLUTION
 	public void computeV(Topology topology, TaskDistribution td) {
 		
 		// Iterate over all cities
@@ -142,7 +189,7 @@ public class ReactiveSolution implements ReactiveBehavior {
 		}		
 		
 		return maxDiff;
-	}
+	}*/
 	
 	
 }
