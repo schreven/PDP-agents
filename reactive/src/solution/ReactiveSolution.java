@@ -65,7 +65,7 @@ public class ReactiveSolution implements ReactiveBehavior {
 		this.statesInCity = new HashMap<City, ArrayList<ReactiveState>>();	
 		this.strategy = new HashMap<ReactiveState, ReactiveAction>();	
 
-		this.stoppingCriterion = 0.05;
+		this.stoppingCriterion = 0.001;
 		
 		LearnStrategy(topology, td);	
 		

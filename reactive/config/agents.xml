@@ -14,5 +14,42 @@
 		<set class-name="solution.ReactiveSolution"></set>
 		<set discount-factor=".98"></set>
 	</agent>
+    
+    <agent name="reactive-neighbor">
+		<set class-path="bin/"></set>
+		<set class-name="solution.ReactiveDummy"></set>
+		<set discount-factor=".98"></set>
+	</agent>
+    
+    <agent name="reactive-rla-15">
+		<set class-path="bin/"></set>
+		<set class-name="solution.ReactiveSolution"></set>
+		<set discount-factor=".15"></set>
+	</agent>
+    
+    
+    <agent name="reactive-rla-50">
+		<set class-path="bin/"></set>
+		<set class-name="solution.ReactiveSolution"></set>
+		<set discount-factor=".50"></set>
+	</agent>
+    
+    <agent name="reactive-rla-95">
+		<set class-path="bin/"></set>
+		<set class-name="solution.ReactiveSolution"></set>
+		<set discount-factor="0.95"></set>
+	</agent>
+    
+	<agent name="reactive-rla-98">
+		<set class-path="bin/"></set>
+		<set class-name="solution.ReactiveSolution"></set>
+		<set discount-factor=".98"></set>
+	</agent>
+    
+	<agent name="reactive-rla-999">
+		<set class-path="bin/"></set>
+		<set class-name="solution.ReactiveSolution"></set>
+		<set discount-factor=".999"></set>
+	</agent>
 
 </agents>
