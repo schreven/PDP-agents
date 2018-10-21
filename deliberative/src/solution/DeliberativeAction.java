@@ -4,16 +4,16 @@ import logist.task.Task;
 
 public class DeliberativeAction {
 	
-	private final boolean action;  // 0: pickup, 1:drop
+	private final boolean pickup;  // true: pickup, false:drop
 	private final Task task;
 	
-	public DeliberativeAction(boolean action, Task task) {
-		this.action = action;
+	public DeliberativeAction(boolean pickup, Task task) {
+		this.pickup = pickup;
 		this.task = task;
 	}
 	
-	public boolean getAction() {
-		return action;
+	public boolean isPickup() {
+		return pickup;
 	}
 	
 	public Task getTask() {
