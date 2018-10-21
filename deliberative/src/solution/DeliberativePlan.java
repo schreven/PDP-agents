@@ -5,6 +5,7 @@ import java.util.ArrayList;
 import java.util.Comparator;
 import java.util.Deque;
 import java.util.Iterator;
+import java.util.ListIterator;
 import java.util.PriorityQueue;
 import java.util.Queue;
 
@@ -17,6 +18,7 @@ public class DeliberativePlan {
 	private final String algorithm;
 	private String heuristic;
 	private final int capacity;
+	private final double maxDistance;
 	private DeliberativeState initialState;
 	private DeliberativeState finalState;
 	private DeliberativeState currentState;
@@ -29,6 +31,19 @@ public class DeliberativePlan {
 		this.algorithm = algorithm;
 		this.heuristic = "None";
 		this.capacity = vehicle.capacity();
+		this.maxDistance = 0;
+		
+		this.initialState = new DeliberativeState(vehicle.getCurrentCity(), tasksLeft, tasksCarried, null);
+		this.currentState = this.initialState;
+		this.statesQueued = new PriorityQueue<DeliberativeState>(11, new DistanceTravelledComparator());
+		this.statesSeen = new ArrayList<DeliberativeState>();
+	}
+	
+	public DeliberativePlan(Vehicle vehicle, TaskSet tasksLeft, TaskSet tasksCarried, String algorithm, String heuristic) {
+		this.algorithm = algorithm;
+		this.heuristic = heuristic;
+		this.capacity = vehicle.capacity();
+		this.maxDistance = 0;
 		
 		this.initialState = new DeliberativeState(vehicle.getCurrentCity(), tasksLeft, tasksCarried, null);
 		this.currentState = this.initialState;
@@ -37,9 +52,8 @@ public class DeliberativePlan {
 	}
 	
 	
-  //Search through the tree for a suitable final state
+  /*Search through the tree for a suitable final state*/
 	public void searchFinalState() {
-		System.out.println(this.algorithm);
 		
 		//add initial state to queue and to list of states seen
 		statesQueued.add(initialState);
@@ -51,20 +65,29 @@ public class DeliberativePlan {
 		TaskSet tempTasksCarried;
 		DeliberativeState exploredState;
 		
+		
 		System.out.println("Searching for final state");
+		double statesExplored = 0;
+		queueloop:
 		while (true) {
 			if (statesQueued.peek() == null) {
 				System.out.println("Failure: No final state reached, and no more states to visit");
 				break;
 			}
+			statesExplored +=1;
+
 			
 			this.currentState = statesQueued.remove();
 			
+			//System.out.println(currentState.getCost());
+			
+			//See if final state has been reached
 			if(this.currentState.getTasksLeft().isEmpty() && this.currentState.getTasksCarried().isEmpty()){
 				System.out.println("Succes: Reached a final state");
 				finalState = this.currentState;
 				break;
 			}
+			
 			
 			//explore states picking up packages
 			for(Iterator<Task> task_it = this.currentState.getTasksLeft().iterator(); task_it.hasNext(); ) {
@@ -81,6 +104,7 @@ public class DeliberativePlan {
 				//Create the new state
 				exploredState = new DeliberativeState(tempTask.pickupCity, tempTasksLeft, tempTasksCarried, this.currentState);
 				
+				//computes cost and adds state if not already seen
 				addExploredState(exploredState);
 			}
 			
@@ -93,15 +117,17 @@ public class DeliberativePlan {
 				
 				//Create the new state
 				exploredState = new DeliberativeState(tempTask.deliveryCity, this.currentState.getTasksLeft(), tempTasksCarried, this.currentState);
-				
+			
 				//computes cost and adds state if not already seen
 				addExploredState(exploredState);
 
 			}
 		}
+		System.out.println("Number of states explored: " + statesExplored);
+		System.out.println("Kilometers to travel for the plan: " + finalState.getTravelCost());
 	}
 	
-	//Trace back through the tree and generate a plan of tasks
+	/*Trace back through the tree and generate a plan of tasks*/
 	public Deque<DeliberativeAction> generateTaskPlan() {
 		System.out.println("Retracing itinerary to get to final state");
 		
@@ -150,16 +176,35 @@ public class DeliberativePlan {
 		return taskPlan;
 	}
 	
-	//If the state has not been seen before, compute its cost and add it to the queue
+	/*If the state has not been seen before, compute its cost and add it to the queue*/
 	void addExploredState(DeliberativeState exploredState) {
-		//Verify that the new state has not already been seen
-		if (!(statesSeen.contains(exploredState))) {
-			//set the cost
-			exploredState.setCost(computeCost(exploredState));
+		//set the cost
+		exploredState.setCost(computeCost(exploredState));
+		
+		//Verify that the new state has not already been seen, or it it has, that the cost is now lower
+		if ((statesSeen.contains(exploredState))) {
+			while (true) {
+				int i = statesSeen.indexOf(exploredState);
+				//if no more identical states in list, break
+				if (i==-1) break;
+				//if state in list is worse, remove it
+				else if(statesSeen.get(i).getCost()>exploredState.getCost()) {
+					statesSeen.remove(statesSeen.get(i));
+				}
+				//if state in list is equal or better, break and newly explored state will not be added
+				else {
+					break;
+				}
+				
+			}
+		}
+		
+		if (!(statesSeen.contains(exploredState))) {// || (better == true)) {
 			//add to list of seen
 			statesSeen.add(exploredState);
 			//Add explored state to the queue
 			statesQueued.add(exploredState);
+			
 		}
 		
 	}
@@ -173,16 +218,8 @@ public class DeliberativePlan {
 			cost = exploredState.getTravelCost();
 		}
 		else if (this.algorithm.equals("ASTAR")) {
-			double heuristicCost = 1;
-			if (this.heuristic.equals("distance")) {
-				heuristicCost = 4;
-			}
-			if (this.heuristic.equals("capacity")) {
-				System.out.println("TEST");
-				heuristicCost = 2;
-			}
-
-			cost = exploredState.getTravelCost() + heuristicCost;
+			exploredState.computeHeuristic(this.heuristic);
+			cost = exploredState.getTravelCost() + exploredState.getHeuristicCost();
 		}
 		else {
 			System.out.println("Error: Algorithm name does not exist");
@@ -193,5 +230,11 @@ public class DeliberativePlan {
 	void setHeuristic(String heuristic) {
 		this.heuristic = heuristic;
 	}
+	
+	double computeHeuristicCost(DeliberativeState state) {
+		
+		return 1;
+	}
+	
 
 }

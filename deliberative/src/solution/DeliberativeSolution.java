@@ -67,6 +67,7 @@ public class DeliberativeSolution implements DeliberativeBehavior {
 	
 	@Override
 	public Plan plan(Vehicle vehicle, TaskSet tasksLeft) {
+			
 		Plan plan;
 		Deque<DeliberativeAction> taskPlan;
 		
@@ -76,10 +77,8 @@ public class DeliberativeSolution implements DeliberativeBehavior {
 		// Compute the plan with the selected algorithm.
 		switch (algorithm) {
 		case ASTAR:
-			//Create a new astarPlan instance
-			DeliberativePlan astarPlan = new DeliberativePlan(vehicle, tasksLeft, tasksCarried,"ASTAR");
-			//Set the heuristic
-			astarPlan.setHeuristic(heuristic);
+			//Create a new astarPlan instance with the appropriate heuristic
+			DeliberativePlan astarPlan = new DeliberativePlan(vehicle, tasksLeft, tasksCarried,"ASTAR", heuristic);
 			//Search through the tree for a suitable final state
 			astarPlan.searchFinalState();
 			//Trace back through the tree and generate a plan of tasks
@@ -143,6 +142,15 @@ public class DeliberativeSolution implements DeliberativeBehavior {
 			tasksCarried = carriedTasks;
 		}
 	}
-
+	
+	double getMaxDistance(Topology topology) {
+		double maxDistance = 0;
+		for (City city1: topology.cities()) {
+			for (City city2: topology.cities()) {
+				if (maxDistance < city1.distanceTo(city2)) maxDistance = city1.distanceTo(city2);
+			}
+		}
+		return maxDistance;
+	}
 }
 

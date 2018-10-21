@@ -3,6 +3,7 @@ package solution;
 import logist.topology.Topology.City;
 
 import java.util.ArrayList;
+import java.util.ListIterator;
 import java.util.Objects;
 
 import logist.task.Task;
@@ -16,9 +17,10 @@ public class DeliberativeState{
 	
 	final private DeliberativeState parentState;
 	private double cost;
-	//only used for A*Search
 	private double travelCost;
+	//only used for A*Search
 	private double heuristicCost;
+	private int capacity;
 	
 	public DeliberativeState(City city, TaskSet tasksLeft, TaskSet tasksCarried, DeliberativeState parentState) {
 		this.city = city;
@@ -31,11 +33,13 @@ public class DeliberativeState{
 		this.heuristicCost = 0.0;
 	}
 	
-	//Only the city, the list of tasks left and the list of tasks carried define a state
+	/*Formally, only the city, the tasksLeft, and the tasksCarried define a state.
+	 * Therefore s1.equals(s2) will be true if this is the case. The costs and the parent are not considered.
+	 */
 	@Override
 	public boolean equals(Object o){
 		DeliberativeState s = (DeliberativeState) o;
-		if ((city == s.city) && (tasksLeft.equals(s.tasksLeft)) && (tasksCarried.equals(s.tasksCarried))) {
+		if ((city == s.city) && (tasksLeft.equals(s.tasksLeft)) && (tasksCarried.equals(s.tasksCarried))) { 
 			return true;
 		}
 		else {
@@ -86,6 +90,71 @@ public class DeliberativeState{
 	
 	public void setHeuristicCost(double cost_) {
 		heuristicCost = cost_;
+	}
+	
+	public void computeHeuristic(String heuristic) {
+		if (heuristic.equals("current-distance")) {
+			heuristicCost=0;
+			
+			ArrayList<City> cities = new ArrayList<City>();
+			
+			for (Task task: tasksLeft) {
+				cities.add(task.pickupCity);
+				cities.add(task.deliveryCity);
+			}
+			for (Task task: tasksCarried) {
+				cities.add(task.deliveryCity);
+			}
+			
+			if (!cities.isEmpty()){
+				//System.out.println(cities.remove(city1));
+				double minDistance = Double.POSITIVE_INFINITY;
+				for (City city2: cities) {
+					if (minDistance > this.city.distanceTo(city2)) {
+						minDistance = this.city.distanceTo(city2);
+					}
+				}
+				this.heuristicCost += minDistance;
+			}
+			
+		}
+	  else if (heuristic.equals("all-distances")){
+			heuristicCost=0;
+			
+			ArrayList<City> cities = new ArrayList<City>();
+			
+			for (Task task: tasksLeft) {
+				cities.add(task.pickupCity);
+				cities.add(task.deliveryCity);
+			}
+			for (Task task: tasksCarried) {
+				cities.add(task.deliveryCity);
+			}
+			
+			if (!cities.isEmpty()){
+				cities.add(this.city);
+			
+				for (City city1: cities) {
+					ArrayList<City> citiesTemp = new ArrayList<City>(cities);
+					citiesTemp.remove(city1);
+					//System.out.println(cities.remove(city1));
+					double minDistance = Double.POSITIVE_INFINITY;
+					for (City city2: citiesTemp) {
+						if (minDistance > city1.distanceTo(city2)) {
+							minDistance = city1.distanceTo(city2);
+						}
+					}
+					this.heuristicCost += minDistance;
+				}
+			}
+
+		}
+	  else if (heuristic.equals("load")) {
+	  	heuristicCost = 0;
+	  	
+	  	
+	  }
+		
 	}
 	
 
