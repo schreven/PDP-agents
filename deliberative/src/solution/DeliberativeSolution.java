@@ -16,6 +16,7 @@ import logist.topology.Topology.City;
 
 import java.util.ArrayDeque;
 import java.util.ArrayList;
+import java.util.Comparator;
 import java.util.Deque;
 import java.util.HashMap;
 import java.util.Iterator;
@@ -29,7 +30,7 @@ import java.util.Queue;
  */
 @SuppressWarnings("unused")
 public class DeliberativeSolution implements DeliberativeBehavior {	
-
+	
 	enum Algorithm { BFS, ASTAR }
 	
 	/* Environment */
@@ -85,12 +86,41 @@ public class DeliberativeSolution implements DeliberativeBehavior {
 		Plan plan = new Plan(currentCity);
 		
 		//Define initial state
-		DeliberativeState initialState = new DeliberativeState(currentCity, tasks, TaskSet.noneOf(tasks));
+		DeliberativeState initialState = new DeliberativeState(currentCity, tasks, TaskSet.noneOf(tasks),1.0);
 		
+		/*
+		DeliberativeState initialState1 = new DeliberativeState(currentCity, tasks, TaskSet.noneOf(tasks),4.0);
+		DeliberativeState initialState2 = new DeliberativeState(currentCity, tasks, TaskSet.noneOf(tasks),5.0);
+		DeliberativeState initialState3 = new DeliberativeState(currentCity, tasks, TaskSet.noneOf(tasks),10.0);
+		DeliberativeState initialState4 = new DeliberativeState(currentCity, tasks, TaskSet.noneOf(tasks),2.0);
+		DeliberativeState initialState5 = new DeliberativeState(currentCity, tasks, TaskSet.noneOf(tasks),0.0);
+		*/
 		
 		//Set up the queue for search algorithm
-		Queue<DeliberativeState> statesQueued = new LinkedList<DeliberativeState>();
+		Comparator<DeliberativeState> comparator = new DistanceTravelledComparator();
+		Queue<DeliberativeState> statesQueued = new PriorityQueue<DeliberativeState>(11, comparator);
+		//Queue<DeliberativeState> statesQueued = new LinkedList<DeliberativeState>();
+	
+		
 		statesQueued.add(initialState);
+		
+		/*
+		statesQueued.add(initialState1);
+		statesQueued.add(initialState2);
+		statesQueued.add(initialState3);
+		statesQueued.add(initialState4);
+		statesQueued.add(initialState5);
+		
+		while (true) {
+			if (statesQueued.peek() == null) {
+				System.out.println("Failure: No final state reached, and no more states to visit");
+				break;
+			}
+			
+			DeliberativeState currentState = statesQueued.poll();
+			System.out.println(currentState.getCost());
+		}
+		*/
 		//Set up the list to keep track of visited stated
 		ArrayList<DeliberativeState> statesSeen = new ArrayList<DeliberativeState>();
 		statesSeen.add(initialState);
@@ -101,15 +131,27 @@ public class DeliberativeSolution implements DeliberativeBehavior {
 		//To save the final state
 		DeliberativeState finalState = null;
 		
+		//Temporary states
+		Task tempTask;
+		TaskSet tempTasksLeft;
+		TaskSet tempTasksCarried;
+		DeliberativeState exploredState;
+		
+		
+		Double tempCost = 0.0;
+		
+		System.out.println("Searching for final state");
 		while (true) {
 			if (statesQueued.peek() == null) {
 				System.out.println("Failure: No final state reached, and no more states to visit");
 				break;
 			}
 			
-			System.out.println(statesQueued.size());
+			DeliberativeState currentState = statesQueued.remove();
 			
-			DeliberativeState currentState = statesQueued.poll();
+			System.out.println(currentState.getCost());
+			
+			//System.out.println(currentState.getTasksCarried().weightSum());
 			
 			if(currentState.getTasksLeft().isEmpty() && currentState.getTasksCarried().isEmpty()){
 				System.out.println("Succes: Reached a final state");
@@ -120,19 +162,23 @@ public class DeliberativeSolution implements DeliberativeBehavior {
 			
 			//explore states picking up packages
 			for(Iterator<Task> task_it = currentState.getTasksLeft().iterator(); task_it.hasNext(); ) {
-				Task tempTask = task_it.next();
-				TaskSet tempTasksLeft = TaskSet.copyOf(currentState.getTasksLeft());
+				tempTask = task_it.next();
+				tempTasksLeft = TaskSet.copyOf(currentState.getTasksLeft());
 				tempTasksLeft.remove(tempTask);
-				TaskSet tempTasksCarried = TaskSet.copyOf(currentState.getTasksCarried());
+				tempTasksCarried = TaskSet.copyOf(currentState.getTasksCarried());
 				tempTasksCarried.add(tempTask);
 				
 				//Verify that vehicle is capable of carrying that extra task
 				if (tempTasksCarried.weightSum() > capacity){continue;}
 				//Create the new state
-				DeliberativeState exploredState = new DeliberativeState(tempTask.pickupCity, tempTasksLeft, tempTasksCarried);
+				exploredState = new DeliberativeState(tempTask.pickupCity, tempTasksLeft, tempTasksCarried, 0.0);
 				
 				//Verify that the new state has not already been seen
 				if (!(statesSeen.contains(exploredState))) {
+					//compute and set cost of the state
+					tempCost = currentState.getCost() + currentState.getCity().distanceTo(exploredState.getCity());
+					exploredState.setCost(tempCost);
+					//add to list of seen
 					statesSeen.add(exploredState);
 					//Add explored state to the queue
 					statesQueued.add(exploredState);
@@ -144,28 +190,32 @@ public class DeliberativeSolution implements DeliberativeBehavior {
 			//explore states delivering tasks
 			for(Iterator<Task> task_it = currentState.getTasksCarried().iterator(); task_it.hasNext(); ) {
 				
-				Task tempTask = task_it.next();
-				TaskSet tempTasksCarried = TaskSet.copyOf(currentState.getTasksCarried());
+				tempTask = task_it.next();
+				tempTasksCarried = TaskSet.copyOf(currentState.getTasksCarried());
 				tempTasksCarried.remove(tempTask);
 				//Create the new state
-				DeliberativeState exploredState = new DeliberativeState(tempTask.deliveryCity, currentState.getTasksLeft(), tempTasksCarried);
+				exploredState = new DeliberativeState(tempTask.deliveryCity, currentState.getTasksLeft(), tempTasksCarried, 0.0);
 				
 				//Verify that the new state has not already been seen
 				if (!(statesSeen.contains(exploredState))) {
+					//compute and set cost of the state
+					tempCost = currentState.getCost() + currentState.getCity().distanceTo(exploredState.getCity());
+					exploredState.setCost(tempCost);
+					//add to list of seen
 					statesSeen.add(exploredState);
 					//Add explored state to the queue
 					statesQueued.add(exploredState);
-					//save trace of parent of the newly explored state
+					//save trace to parent of the newly explored state
 					parent.put(exploredState, currentState);
+
 				}
 			}
 			
-
 			
 
 		}
 		
-		System.out.println("test1");
+		System.out.println("Retracing itinerary to get to final state");
 		
 		//trace back set of necessary actions
 		
@@ -179,7 +229,7 @@ public class DeliberativeSolution implements DeliberativeBehavior {
 		
 		
 		while(tracedState!=initialState) {
-			System.out.println(tracedState.getCurrentCity());
+			System.out.println(tracedState.getCity());
 			tracedStateParent = parent.get(tracedState);
 			//A Task was picked up
 			if (tracedStateParent.getTasksLeft()!=tracedState.getTasksLeft()) {
