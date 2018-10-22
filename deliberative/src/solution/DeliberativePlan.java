@@ -18,6 +18,7 @@ public class DeliberativePlan {
 	private final String algorithm;
 	private String heuristic;
 	private final int capacity;
+	private final int costKm;
 	private final double maxDistance;
 	private DeliberativeState initialState;
 	private DeliberativeState finalState;
@@ -31,6 +32,7 @@ public class DeliberativePlan {
 		this.algorithm = algorithm;
 		this.heuristic = "None";
 		this.capacity = vehicle.capacity();
+		this.costKm = vehicle.costPerKm();
 		this.maxDistance = 0;
 		
 		this.initialState = new DeliberativeState(vehicle.getCurrentCity(), tasksLeft, tasksCarried, null);
@@ -43,6 +45,7 @@ public class DeliberativePlan {
 		this.algorithm = algorithm;
 		this.heuristic = heuristic;
 		this.capacity = vehicle.capacity();
+		this.costKm = vehicle.costPerKm();
 		this.maxDistance = 0;
 		
 		this.initialState = new DeliberativeState(vehicle.getCurrentCity(), tasksLeft, tasksCarried, null);
@@ -213,7 +216,7 @@ public class DeliberativePlan {
 		double cost = 0.0;
 		
 		//set the travel costs
-		exploredState.setTravelCost(this.currentState.getTravelCost() + this.currentState.getCity().distanceTo(exploredState.getCity()));
+		exploredState.setTravelCost(this.currentState.getTravelCost() + costKm * this.currentState.getCity().distanceTo(exploredState.getCity()));
 		if (this.algorithm.equals("BFS")) {
 			cost = exploredState.getTravelCost();
 		}
