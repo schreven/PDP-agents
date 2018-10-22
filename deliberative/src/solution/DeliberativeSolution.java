@@ -92,7 +92,7 @@ public class DeliberativeSolution implements DeliberativeBehavior {
 			//Search through the tree for a suitable final state
 			bfsPlan.searchFinalState();
 			//Trace back through the tree and generate a plan of tasks
-		  taskPlan = bfsPlan.generateTaskPlan();
+			taskPlan = bfsPlan.generateTaskPlan();
 			
 			break;
 			

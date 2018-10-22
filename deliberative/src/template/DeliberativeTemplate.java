@@ -6,7 +6,7 @@ import logist.simulation.Vehicle;
 import java.awt.List;
 import java.util.ArrayList;
 
-import com.sun.tools.javac.code.Attribute.Array;
+//import com.sun.tools.javac.code.Attribute.Array;
 
 import logist.agent.Agent;
 import logist.behavior.DeliberativeBehavior;

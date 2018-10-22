@@ -6,6 +6,6 @@
 			<attribute name="module" value="true"/>
 		</attributes>
 	</classpathentry>
-	<classpathentry kind="lib" path="/home/cyril-kubu/Documents/github_repos/intelligent-agents-ex/logist/logist.jar"/>
+	<classpathentry kind="lib" path="../logist/logist.jar"/>
 	<classpathentry kind="output" path="bin"/>
 </classpath>
