@@ -3,8 +3,12 @@ package solution;
 import logist.topology.Topology.City;
 
 import java.util.ArrayList;
+import java.util.HashSet;
+import java.util.LinkedList;
 import java.util.ListIterator;
 import java.util.Objects;
+import java.util.Queue;
+import java.util.Set;
 
 import logist.task.Task;
 import logist.task.TaskSet;
@@ -149,8 +153,46 @@ public class DeliberativeState{
 			}
 
 		}
-	  else if (heuristic.equals("load")) {
+	  else if (heuristic.equals("greedy-path")) {
 	  	heuristicCost = 0;
+			Set<City> cities = new HashSet<City>();
+	  	
+			for (Task task: tasksLeft) {
+				cities.add(task.pickupCity);
+				cities.add(task.deliveryCity);
+			}
+			for (Task task: tasksCarried) {
+				cities.add(task.deliveryCity);
+			}
+	  	
+			Queue<City> queue = new LinkedList<City>();
+	  	
+			queue.add(this.city);
+			
+			City city1;
+			City nextCity;
+			
+			while (true) {
+				
+				//if there is just one city left
+				if (cities.size()<=1) {
+					break;
+				}
+				
+				city1 = queue.remove();
+				nextCity=null;
+				cities.remove(city1);
+				
+				double minDistance = Double.POSITIVE_INFINITY;
+				for (City city2: cities) {
+					if (minDistance > city1.distanceTo(city2)) {
+						minDistance = city1.distanceTo(city2);
+						nextCity = city2;
+					}
+				}
+				this.heuristicCost += minDistance;
+				queue.add(nextCity);
+			}
 	  	
 	  	
 	  }

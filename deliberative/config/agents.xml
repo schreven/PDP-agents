@@ -14,14 +14,13 @@
 		<set class-path="bin/"/>
 		<set class-name="solution.DeliberativeSolution"/>
 		<set algorithm="ASTAR"/>
-		<set heuristic = "current-distance"/>
+		<set heuristic = "all-distances"/>
 	</agent>
 
 	<agent name="deliberative-BFS">
 		<set class-path="bin/"/>
 		<set class-name="solution.DeliberativeSolution"/>
 		<set algorithm="BFS"/>
-		<set heuristic = "distance"/>
 	</agent>
 
 	<agent name="deliberative-ASTAR-1">
@@ -31,11 +30,18 @@
 		<set heuristic = "current-distance"/>
 	</agent>
 
-	<agent name="deliberative-ASTAR-1">
+	<agent name="deliberative-ASTAR-2">
 		<set class-path="bin/"/>
 		<set class-name="solution.DeliberativeSolution"/>
 		<set algorithm="ASTAR"/>
-		<set heuristic = "current-distance"/>
+		<set heuristic = "all-distances"/>
+	</agent>
+
+	<agent name="deliberative-ASTAR-3">
+		<set class-path="bin/"/>
+		<set class-name="solution.DeliberativeSolution"/>
+		<set algorithm="ASTAR"/>
+		<set heuristic = "greedy-path"/>
 	</agent>
 
 </agents>
