@@ -5,8 +5,11 @@ import java.util.ArrayList;
 import java.util.Comparator;
 import java.util.List;
 import java.util.Random;
+import java.util.Set;
 import java.util.Map;
 import java.util.HashMap;
+import java.util.HashSet;
+
 import logist.LogistSettings;
 
 import logist.Measures;
@@ -32,15 +35,22 @@ public class CentralizedSolution implements CentralizedBehavior {
     private long timeout_setup;
     private long timeout_plan;
     
+
     // max iteration allowed to find local optimal.
     private final int maxIterations = 10000;
     
     /* CSP Variables */  
     // nextTask is divided in two arrays because we have two key types (Task and Vehicle)
-    private Map<Task, Task> nextTaskT;
-    private Map<Vehicle, Task> nextTaskV;
-    private Map<Task, Integer> time;
-    private Map<Task, Vehicle> vehicle;
+    private Map<CentralizedAction, CentralizedAction> nextActionA;
+    private Map<Vehicle, CentralizedAction> nextActionV;
+    private Map<CentralizedAction, Integer> time;
+    private Map<CentralizedAction, Vehicle> vehicle;
+    private CentralizedPlan currentPlan;
+    
+    private Map<Vehicle, Integer> availableCapacity; 
+    
+    //Map a pickup action with its delivery action
+    private Map<CentralizedAction,CentralizedAction> correspondingDelivery;
 
     
     @Override
@@ -64,10 +74,12 @@ public class CentralizedSolution implements CentralizedBehavior {
         this.topology = topology;
         this.distribution = distribution;
         this.agent = agent;	
-        this.time = new HashMap<Task, Integer>();
-        this.vehicle = new HashMap<Task, Vehicle>();
-        this.nextTaskT = new HashMap<Task, Task>();
-        this.nextTaskV = new HashMap<Vehicle, Task>();
+        this.nextActionA = new HashMap<CentralizedAction, CentralizedAction>();
+        this.nextActionV = new HashMap<Vehicle, CentralizedAction>();
+        this.time = new HashMap<CentralizedAction, Integer>();
+        this.vehicle = new HashMap<CentralizedAction, Vehicle>();
+        this.currentPlan = new CentralizedPlan(nextActionA, nextActionV, time, vehicle);
+        this.correspondingDelivery = new HashMap<CentralizedAction,CentralizedAction>();
     }
 
     // List of the plan for each vehicle
@@ -76,7 +88,9 @@ public class CentralizedSolution implements CentralizedBehavior {
         long time_start = System.currentTimeMillis(); 	// save current time to measure computation duration
         double totalCost = 0;							// total cost of a solution
         double oldTotalCost = 0;						// total cost of a previous solution
-
+        Set<CentralizedAction> actions = toActionSet(tasks);
+        
+        
         /* Use Constraint Satisfaction Problem Optimization to find list of plans*/
         List<Plan> plans = new ArrayList<Plan>();
         List<Plan> oldPlans = new ArrayList<Plan>();
@@ -84,7 +98,7 @@ public class CentralizedSolution implements CentralizedBehavior {
         // Initialize variables with non optimized plan.
         // Fails if a task has a weight bigger than any vehicle capacity.
         try {
-			SelectInitialSolution(vehicles, tasks);
+			SelectInitialSolution(vehicles, actions);
 		} catch (Exception e) {
 			System.out.println(e.getMessage());
 		}
@@ -129,11 +143,12 @@ public class CentralizedSolution implements CentralizedBehavior {
         return plans;
     }
     
-    private void SelectInitialSolution(List<Vehicle> vehicles, TaskSet tasks) throws Exception {
+    private void SelectInitialSolution(List<Vehicle> vehicles, Set<CentralizedAction> actions) throws Exception {
     	/* Give all the tasks to the biggest vehicle. Only updates global variables*/
+    	/* The vehicle only carries one task at a time with this plan*/
     	
     	int order = 1;			// order in which the task are handled by a vehicle
-    	Task prevTask = null;	// previous task carried by a vehicle
+    	CentralizedAction prevAction = null;	// previous action carried by a vehicle
     	    	
     	// find biggest vehicle, i.e. vehicle with largest capacity
     	Vehicle bigVehicle = vehicles.get(0);
@@ -144,69 +159,90 @@ public class CentralizedSolution implements CentralizedBehavior {
     	}
     	
     	// iterate over task set
-    	for (Task task : tasks) {  
+    	for (CentralizedAction action : actions) { 
+    		//select only pickups in the loop
+    		if (!action.isPickup()) continue;
     		
     		// if the biggest vehicle cannot carry a task, the problem is unsolvable.
-    		if (task.weight > bigVehicle.capacity()) {
-    			throw new Exception("The task (id: "+task.id+") has a weight too big ! Problem unsolvable.");  	
+    		if (action.getTask().weight > bigVehicle.capacity()) {
+    			throw new Exception("The task (id: "+action.getTask().id+") has a weight too big ! Problem unsolvable.");  	
     		}
  
-    		// fill arrays
-			this.nextTaskT.put(prevTask, task);  
-			this.nextTaskT.put(task, null);
-    		this.nextTaskV.put(bigVehicle, task);
-    		this.time.put(task, order);
-    		this.vehicle.put(task, bigVehicle);
-    		
+    		// fill arrays for pickup
+    		if (prevAction != null) this.nextActionA.put(prevAction, action);  
+    		this.nextActionV.put(bigVehicle, action);
+    		this.time.put(action, order);
+    		this.vehicle.put(action, bigVehicle);
     		order++;
-    		prevTask = task;
+    		// fill arrays for delivery
+    		this.nextActionA.put(action, correspondingDelivery.get(action));
+    		this.nextActionA.put(correspondingDelivery.get(action), null);
+    		this.nextActionV.put(bigVehicle, correspondingDelivery.get(action));
+    		this.time.put(correspondingDelivery.get(action), order);
+    		this.vehicle.put(correspondingDelivery.get(action), bigVehicle);
+    		order++;
+    		prevAction = correspondingDelivery.get(action);
+
     	}   
+    	//set the current plan
+    	this.currentPlan = new CentralizedPlan(this.nextActionA,this.nextActionV, this.time, this.vehicle);
     	
-    	if (!VerifyConstraints()) {
+    	if (!currentPlan.verifyConstraints(vehicles, actions)) {
     		throw new Exception("Problem solved, but did not meet the constraints");  	// shouldn't go here
     	}
     	
     }
     
-    private boolean VerifyConstraints() {
-    	/* Based on the CSP Variables, verify if all the constraints are met */
-    	
-    	// TODO
-    	
-    	return true;
-    }
     
-    private void ChooseNeighbours() {
-    	/* Find a neighbor to the current solution */
+    private List<CentralizedPlan> ChooseNeighbours(List<Vehicle> vehicles, List<CentralizedPlan> plans) {
+    	/* Find neighbours to the current solution */
+    	List<CentralizedPlan> neighbourPlans = new ArrayList<CentralizedPlan>();
     	
-    	// TODO
     	
-    }
-    
-    private List<Plan> ComputePlans(){
-    	/* Compute Logist Plan for each vehicle according to the global CSP variables*/
+    	//select one random vehicle "transmitting" his tasks
+    	Random randomizer = new Random();
+    	Vehicle randomVehicle = vehicles.get(randomizer.nextInt(vehicles.size()));
     	
-    	List<Plan> plans = new ArrayList<Plan>();
-    	
-    	// TODO
-    	
-    	return plans;
-    }
-    
-    private double ComputeCost(List<Plan> plans, List<Vehicle> vehicles) {
-    	double cost = 0;
-    	int costKm = 0;
-    	int index = 0;
-    	
-    	// iterate over all vehicles and all plans
-    	for (Vehicle vehicle : vehicles) {
-    		costKm = vehicle.costPerKm();
+    	for (Vehicle vehicleTemp : vehicles) {
+    		if (vehicleTemp == randomVehicle) continue;
+    		newPlan = changingVehicle(nextActionV.get(randomVehicle),vehicleTemp))
     		
-    		cost += costKm * plans.get(index).totalDistance();
-    		index++;
-    	}    	
+    	}
     	
-    	return cost;
+    	
     }
     
+    
+    
+    
+    private Set<CentralizedAction> toActionSet(TaskSet tasks){
+    	Set<CentralizedAction> actionSet = new HashSet<CentralizedAction>();
+    	for (Task taskTemp : tasks) {
+    		//add the corresponding pickup and delivery
+    		CentralizedAction pickupAction = new CentralizedAction(taskTemp,true);
+    		actionSet.add(pickupAction);
+    		CentralizedAction deliveryAction = new CentralizedAction(taskTemp,false);
+    		actionSet.add(deliveryAction);
+    		//updating the mapping
+    		this.correspondingDelivery.put(pickupAction, deliveryAction);
+    	}
+    	return actionSet;
+    }
+    
+    private CentralizedPlan changingVehicle(Vehicle vehicleGive, Vehicle vehicleReceive) {
+    	CentralizedPlan newPlan;// = new CentralizedPlan();
+    	CentralizedAction transmittedPickup = nextActionV.get(vehicleGive);
+    	CentralizedAction tranmittedDelivery = this.correspondingDelivery.get(transmittedPickup);
+    	
+    	nextActionV.put(vehicleGive, nextActionA.get(transmittedPickup));
+    	nextActionA.put(transmittedPickup, nextActionV.get(vehicleReceive));
+    	nextActionV.put(vehicleReceive, transmittedPickup);
+    	vehicle.put(transmittedPickup, vehicleReceive);
+    	
+    	
+    	
+    	
+    	return newPlan;
+    	
+    }
 }
