@@ -83,7 +83,10 @@ public class CentralizedSolution implements CentralizedBehavior {
         this.nextActionV = new HashMap<Vehicle, CentralizedAction>();
         this.time = new HashMap<CentralizedAction, Integer>();
         this.vehicle = new HashMap<CentralizedAction, Vehicle>();
-        this.currentPlan = new CentralizedPlan(nextActionA, nextActionV, time, vehicle);
+        this.currentPlan = new CentralizedPlan(new HashMap<CentralizedAction, CentralizedAction>(),
+        				new HashMap<Vehicle, CentralizedAction>(), 
+        				new HashMap<CentralizedAction, Integer>(),
+        				new HashMap<CentralizedAction, Vehicle>());
         this.correspondingDelivery = new HashMap<CentralizedAction,CentralizedAction>();
     }
 
@@ -201,7 +204,10 @@ public class CentralizedSolution implements CentralizedBehavior {
     		prevAction = correspondingDelivery.get(action);
     	}   
     	//set the current plan
-    	this.currentPlan = new CentralizedPlan(this.nextActionA,this.nextActionV, this.time, this.vehicle);
+    	 CentralizedPlan initialPlan = new CentralizedPlan(this.nextActionA,this.nextActionV, this.time, this.vehicle);
+    	
+    	setCurrentPlan(initialPlan);
+    	
     	
     	
     	if (!verifyConstraints()) {
@@ -219,9 +225,12 @@ public class CentralizedSolution implements CentralizedBehavior {
     	
     	//select one random vehicle "transmitting" his tasks and "shuffling" them
     	Vehicle chosenVehicle;
+    	int i_ = vehicles.size()-1;
     	do {
     	Random randomizer = new Random();
     	chosenVehicle = vehicles.get(randomizer.nextInt(vehicles.size()));
+    	//chosenVehicle = vehicles.get(i_);
+    	i_-=1;
     	} while(this.nextActionV.get(chosenVehicle)==null);
     	
     	//not problem here, is not null.
@@ -232,9 +241,9 @@ public class CentralizedSolution implements CentralizedBehavior {
     	/*creating new plans with a task transmitted to another vehicle*/
     	for (Vehicle vehicleTemp : vehicles) {
     		if (vehicleTemp == chosenVehicle) continue;
-    		CentralizedPlan newPlan = changingVehicle(chosenVehicle,vehicleTemp);
-    		if (newPlan != null) {
-    			neighbourPlans.add(newPlan);
+    		CentralizedPlan newPlanVehicle = changingVehicle(chosenVehicle,vehicleTemp);
+    		if (newPlanVehicle != null) {
+    			neighbourPlans.add(newPlanVehicle);
     		}
 
 	
@@ -254,9 +263,9 @@ public class CentralizedSolution implements CentralizedBehavior {
     	if (lengthChosenVehicle>=2) {
     		for (int i = 0; i<=lengthChosenVehicle-1; i++) {
     			for (int j = i+1; j< lengthChosenVehicle; j++) {
-    				CentralizedPlan newPlan = changingActionOrder(chosenVehicle,i,j);
-    				if (newPlan != null) {
-    	    			neighbourPlans.add(newPlan);
+    				CentralizedPlan newPlanOrder = changingActionOrder(chosenVehicle,i,j);
+    				if (newPlanOrder != null) {
+    	    			neighbourPlans.add(newPlanOrder);
     	    		}
     			}
     		}
@@ -412,7 +421,8 @@ public class CentralizedSolution implements CentralizedBehavior {
     	// add current plan to list of compared with 40% chance
     	Double probAddCurrent = 0.4;
     	Random random = new Random();
-    	if (random.nextFloat() < probAddCurrent) {
+    	//if (random.nextFloat() < probAddCurrent) {
+    	if (false) {
     		neighbourPlans.add(this.currentPlan);
     	}
     	
@@ -514,15 +524,21 @@ public class CentralizedSolution implements CentralizedBehavior {
     
     /*resets the global CSP variable to the current plan*/
     private void resetCSPVariables() {
-    	this.nextActionA = this.currentPlan.getNextActionA();
-    	this.nextActionV = this.currentPlan.getNextActionV();
-    	this.time = this.currentPlan.getTime();
-    	this.vehicle = this.currentPlan.getVehicle();
+
+    	this.nextActionA = new HashMap<CentralizedAction, CentralizedAction>(this.currentPlan.getNextActionA());
+    	this.nextActionV = new HashMap<Vehicle, CentralizedAction>(this.currentPlan.getNextActionV());
+    	this.time = new HashMap<CentralizedAction, Integer>(this.currentPlan.getTime());
+    	this.vehicle = new HashMap<CentralizedAction, Vehicle>(this.currentPlan.getVehicle());
+	
     }
     /*set current plant*/
     private void setCurrentPlan(CentralizedPlan bestPlan) {
     	this.currentPlan = new CentralizedPlan(bestPlan.getNextActionA(),
-    						bestPlan.getNextActionV(), bestPlan.getTime(), bestPlan.getVehicle());
-    	
+    		bestPlan.getNextActionV(),
+    		bestPlan.getTime(), 
+    		bestPlan.getVehicle());
+			
+    			
     }
+
 }
