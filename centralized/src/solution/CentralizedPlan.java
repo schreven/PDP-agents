@@ -3,9 +3,11 @@ package solution;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Map;
+import java.util.Objects;
 import java.util.Set;
 
 import logist.simulation.Vehicle;
+import logist.task.Task;
 import logist.task.TaskSet;
 import logist.topology.Topology.City;
 
@@ -32,6 +34,7 @@ public class CentralizedPlan {
 		this.plans = computePlan();
 		this.cost = computeCost();
 	}
+
 	
 	
 	private ArrayList<Plan> computePlan(){
@@ -39,6 +42,8 @@ public class CentralizedPlan {
 		CentralizedAction actionTemp;
 		
 		for (Vehicle vehicleTemp : this.nextActionV.keySet()) {
+			if (nextActionV.get(vehicleTemp)==null) continue;
+			//directly skip vehicles without tasks
 			City currentCity = vehicleTemp.getCurrentCity();
 			Plan plan = new Plan(currentCity);
 			
@@ -96,46 +101,24 @@ public class CentralizedPlan {
 		return cost;	
 	}
 	
-	public boolean verifyConstraints(List<Vehicle> vehicles, Set<CentralizedAction> actions){
-		/* Based on the CSP Variables, verify if all the constraints are met */
-		Integer capacityTemp;
-		CentralizedAction action;
-		
-    	for (CentralizedAction actionTemp : nextActionA.keySet()) {
-    		// Constraint 1
-    		if (actionTemp == nextActionA.get(actionTemp)) return false;
-    		// Constraint 3
-    		else if (nextActionA.get(actionTemp)!=null && 
-    				time.get(nextActionA.get(actionTemp)) != time.get(actionTemp) +1 ) {
-    			return false;}   	
-    		//Contraint 5
-    		else if (nextActionA.get(actionTemp)!=null && 
-    				vehicle.get(nextActionA.get(actionTemp))!= vehicle.get(actionTemp)) {
-    			return false;}
-    	}
-    	
-    	for (Vehicle vehicleTemp : nextActionV.keySet()) {
-    		//Contraint 2
-    		if (time.get(nextActionV.get(vehicleTemp))!=1) return false;
-    		//Constraint 4
-    		else if (vehicle.get(nextActionV.get(vehicleTemp))!=vehicleTemp) return false;
-    		//Constraint 7
-    		action = nextActionV.get(vehicleTemp);
-    		capacityTemp = vehicleTemp.capacity();
-    		while (action!=null) {
-    			//substract to available capacity if pickup
-    			if (action.isPickup()) capacityTemp -= action.getTask().weight;
-    			//add to available capacity if delivery
-    			else capacityTemp += action.getTask().weight;
-    			if (capacityTemp<0) return false;
-    		}
-
-    	}
-    	//Contraint 6
-    	if ((nextActionA.size()+nextActionV.size())!= (actions.size()+vehicles.size())) {
-    		return false;}
-    	
-		return true;
+	public Map<CentralizedAction, CentralizedAction> getNextActionA() {
+		return this.nextActionA;
+	}
+	
+	public Map<Vehicle, CentralizedAction> getNextActionV() {
+		return this.nextActionV;
+	}
+	
+	public Map<CentralizedAction, Integer> getTime(){
+		return this.time;
+	}
+	
+	public Map<CentralizedAction, Vehicle> getVehicle(){
+		return this.vehicle;
+	}
+	
+	public Double getCost(){
+		return this.cost;
 	}
     
 }
