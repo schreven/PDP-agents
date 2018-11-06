@@ -36,7 +36,7 @@ public class CentralizedPlan {
 		this.time = new HashMap<CentralizedAction, Integer>(time);
 		this.vehicle = new HashMap<CentralizedAction, Vehicle>(vehicle);
 		this.plans = computePlan(vehiclesList);
-		this.cost = computeCost();
+		this.cost = computeCost(vehiclesList);
 	}
 
 	
@@ -96,13 +96,20 @@ public class CentralizedPlan {
 		return plans;	
 	}
 	
-	private Double computeCost() {
+	private Double computeCost(List<Vehicle> vehiclesList) {
 		Double cost = 0.;
 		Integer id = 0;
 		
 		//compute and add cost of each vehicle
-		for (Vehicle vehicleTemp : this.nextActionV.keySet()) {
+		for (Vehicle vehicleTemp : vehiclesList) {
+			//if (cost < vehicleTemp.costPerKm()*this.plans.get(id).totalDistance()) {
+			//	cost = vehicleTemp.costPerKm()*this.plans.get(id).totalDistance();};
 			cost += vehicleTemp.costPerKm()*this.plans.get(id).totalDistance();
+			
+			id+=1;
+		}
+		if (cost == 0) {
+			//System.out.println("errrrr");
 		}
 		return cost;	
 	}

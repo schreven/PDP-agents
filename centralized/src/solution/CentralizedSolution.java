@@ -38,7 +38,7 @@ public class CentralizedSolution implements CentralizedBehavior {
     
 
     // max iteration allowed to find local optimal.
-    private final int maxIterations = 10000;
+    private final int maxIterations = 1000;
     
     //vehicles and actions for the planning
     private List<Vehicle> vehicles;
@@ -124,18 +124,11 @@ public class CentralizedSolution implements CentralizedBehavior {
         	/* Find neighbours */
         	neighbourPlans = ChooseNeighbours();
         	System.out.println("Found " + neighbourPlans.size()+ " valid neighbours");
-        	
-        	//for (CentralizedAction action_ : nextActionA.keySet()) {
-        	//	System.out.println(time.get(nextActionA.get(action_)));
-        	//}
-        	
+
         	
         	/* Select the most promissing one */
-        	
-        	
-        	
         	bestNewPlan = LocalChoice(neighbourPlans);
-
+        	System.out.println("The cost of the the new plan is: " + bestNewPlan.getCost());
         	
         	//experimenting
         	//this.currentPlan = bestNewPlan;
@@ -410,12 +403,14 @@ public class CentralizedSolution implements CentralizedBehavior {
     	CentralizedPlan bestPlan = neighbourPlans.get(0);
     	
     	// add current plan to list of compared with 40% chance
-    	Double probAddCurrent = 0.4;
+  	
     	Random random = new Random();
+    	Double probPickSecond = 0.;
+    	Double probAddCurrent = 0.4;
+    	
     	if (random.nextFloat() < probAddCurrent) {
     		neighbourPlans.add(this.currentPlan);
     	}
-    	
     	
     	for (CentralizedPlan plan : neighbourPlans) {
     		
@@ -428,6 +423,19 @@ public class CentralizedSolution implements CentralizedBehavior {
     	        if (random.nextInt()%2 == 0) bestPlan = plan;
     		}
     	}
+    	
+    	if (random.nextFloat() < probPickSecond) {
+    		CentralizedPlan secondBestPlan = neighbourPlans.get(0);
+    		//find the second next best plan
+    		for (CentralizedPlan plan : neighbourPlans) {
+    			if (plan == bestPlan) continue;
+	    		if (plan.getCost() < secondBestPlan.getCost()) {
+	    			secondBestPlan = plan;
+	    		}  
+    		}
+    		bestPlan = secondBestPlan;
+    	}
+    	
     	return bestPlan;
     }
     
@@ -514,17 +522,6 @@ public class CentralizedSolution implements CentralizedBehavior {
     
     /*resets the global CSP variable to the current plan*/
     private void resetCSPVariables() {
-    	/*
-    	this.nextActionA.clear();
-    	this.nextActionV.clear();
-    	this.time.clear();
-    	this.vehicle.clear();
-    	
-    	this.nextActionA = this.currentPlan.getNextActionA();
-    	this.nextActionV = this.currentPlan.getNextActionV();
-    	this.time = this.currentPlan.getTime();
-    	this.vehicle = this.currentPlan.getVehicle();*/
-    	
     	this.nextActionA = new HashMap<CentralizedAction, CentralizedAction>(this.currentPlan.getNextActionA());
         this.nextActionV = new HashMap<Vehicle, CentralizedAction>(this.currentPlan.getNextActionV());
         this.time = new HashMap<CentralizedAction, Integer>(this.currentPlan.getTime());
