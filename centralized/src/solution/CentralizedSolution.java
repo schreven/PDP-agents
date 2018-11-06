@@ -38,7 +38,7 @@ public class CentralizedSolution implements CentralizedBehavior {
     
 
     // max iteration allowed to find local optimal.
-    private final int maxIterations = 1000;
+    private final int maxIterations = 10000;
     
     //vehicles and actions for the planning
     private List<Vehicle> vehicles;
@@ -122,12 +122,12 @@ public class CentralizedSolution implements CentralizedBehavior {
         for (int i = 0; i < maxIterations; i++) {
      
         	/* Find neighbours */
-        	neighbourPlans = ChooseNeighbours();
+        	neighbourPlans = ChooseNeighbours(i);
         	System.out.println("Found " + neighbourPlans.size()+ " valid neighbours");
 
         	
         	/* Select the most promissing one */
-        	bestNewPlan = LocalChoice(neighbourPlans);
+        	bestNewPlan = LocalChoice(neighbourPlans, i);
         	System.out.println("The cost of the the new plan is: " + bestNewPlan.getCost());
         	
         	//experimenting
@@ -203,7 +203,7 @@ public class CentralizedSolution implements CentralizedBehavior {
     }
     
     
-    private List<CentralizedPlan> ChooseNeighbours() {
+    private List<CentralizedPlan> ChooseNeighbours(Integer iter) {
     	resetCSPVariables();
     	
     	/* Find neighbours to the current solution */
@@ -399,20 +399,30 @@ public class CentralizedSolution implements CentralizedBehavior {
     	}
     }
     
-    private CentralizedPlan LocalChoice(List<CentralizedPlan> neighbourPlans) {
+    private CentralizedPlan LocalChoice(List<CentralizedPlan> neighbourPlans, Integer iter) {
     	CentralizedPlan bestPlan = neighbourPlans.get(0);
     	
     	// add current plan to list of compared with 40% chance
   	
     	Random random = new Random();
-    	Double probPickSecond = 0.;
-    	Double probAddCurrent = 0.4;
+    	Double probAddCurrent = 0.3;
+    	Double probPickSecond = 0.4;
+    	Double probPickRandom = 0.5*(maxIterations-iter)/maxIterations;
+    	Double probIgnore = 0.;
     	
     	if (random.nextFloat() < probAddCurrent) {
     		neighbourPlans.add(this.currentPlan);
     	}
     	
+    	if (random.nextFloat() < probPickRandom) {
+    		return neighbourPlans.get(random.nextInt(neighbourPlans.size()));
+    	}
+    	
+    	
     	for (CentralizedPlan plan : neighbourPlans) {
+    		if (random.nextFloat() > probIgnore) {
+    			continue;
+    		}
     		
     		//find the best plan
     		if (plan.getCost() < bestPlan.getCost()) {

@@ -104,7 +104,8 @@ public class CentralizedPlan {
 		for (Vehicle vehicleTemp : vehiclesList) {
 			//if (cost < vehicleTemp.costPerKm()*this.plans.get(id).totalDistance()) {
 			//	cost = vehicleTemp.costPerKm()*this.plans.get(id).totalDistance();};
-			cost += vehicleTemp.costPerKm()*this.plans.get(id).totalDistance();
+			cost += vehicleTemp.costPerKm()*(this.plans.get(id).totalDistance());
+		
 			
 			id+=1;
 		}
