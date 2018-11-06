@@ -1,15 +1,14 @@
 package solution;
 
 import java.util.ArrayList;
-import java.util.HashMap;
-//import java.util.List;
+import java.util.List;
 import java.util.Map;
-//import java.util.Objects;
-//import java.util.Set;
+import java.util.Objects;
+import java.util.Set;
 
 import logist.simulation.Vehicle;
-//import logist.task.Task;
-//import logist.task.TaskSet;
+import logist.task.Task;
+import logist.task.TaskSet;
 import logist.topology.Topology.City;
 
 import logist.plan.Plan;
@@ -28,10 +27,10 @@ public class CentralizedPlan {
 							Map<CentralizedAction, Integer> time,
 							Map<CentralizedAction, Vehicle> vehicle) {
 		
-		this.nextActionA = new HashMap<CentralizedAction, CentralizedAction>(nextActionA);
-		this.nextActionV = new HashMap<Vehicle, CentralizedAction>(nextActionV);
-		this.time = new HashMap<CentralizedAction, Integer>(time);
-		this.vehicle = new HashMap<CentralizedAction, Vehicle>(vehicle);
+		this.nextActionA = nextActionA;
+		this.nextActionV = nextActionV;
+		this.time = time;
+		this.vehicle = vehicle;
 		this.plans = computePlan();
 		this.cost = computeCost();
 	}
@@ -43,14 +42,10 @@ public class CentralizedPlan {
 		CentralizedAction actionTemp;
 		
 		for (Vehicle vehicleTemp : this.nextActionV.keySet()) {
-			
+			if (nextActionV.get(vehicleTemp)==null) continue;
+			//directly skip vehicles without tasks
 			City currentCity = vehicleTemp.getCurrentCity();
 			Plan plan = new Plan(currentCity);
-			
-			if (nextActionV.get(vehicleTemp)==null) {
-				plans.add(plan);
-				continue; //directly skip vehicles without tasks
-			}
 			
 			actionTemp = nextActionV.get(vehicleTemp);
 			
@@ -61,7 +56,9 @@ public class CentralizedPlan {
 			//pickup task
 			plan.appendPickup(actionTemp.getTask());
 			// update current city
-			currentCity = actionTemp.getTask().pickupCity;			
+			currentCity = actionTemp.getTask().pickupCity;
+
+			
 			
 			while(nextActionA.get(actionTemp)!=null){
 				actionTemp = nextActionA.get(actionTemp);
@@ -123,11 +120,6 @@ public class CentralizedPlan {
 	public Double getCost(){
 		return this.cost;
 	}
-	
-	public ArrayList<Plan> getPlan(){
-		return this.plans;
-	}
-	
     
 }
 

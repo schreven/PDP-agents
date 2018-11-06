@@ -83,12 +83,16 @@ public class CentralizedSolution implements CentralizedBehavior {
         this.nextActionV = new HashMap<Vehicle, CentralizedAction>();
         this.time = new HashMap<CentralizedAction, Integer>();
         this.vehicle = new HashMap<CentralizedAction, Vehicle>();
+<<<<<<< HEAD
 
         this.currentPlan = new CentralizedPlan(new HashMap<CentralizedAction, CentralizedAction>(),
         				new HashMap<Vehicle, CentralizedAction>(), 
         				new HashMap<CentralizedAction, Integer>(),
         				new HashMap<CentralizedAction, Vehicle>());
 
+=======
+        this.currentPlan = new CentralizedPlan(nextActionA, nextActionV, time, vehicle);
+>>>>>>> parent of e783d20... Merge pull request #5 from schreven/valentin
         this.correspondingDelivery = new HashMap<CentralizedAction,CentralizedAction>();
     }
 
@@ -106,6 +110,7 @@ public class CentralizedSolution implements CentralizedBehavior {
         
         /* Use Constraint Satisfaction Problem Optimization to find list of plans*/
         List<Plan> plans = new ArrayList<Plan>();
+        List<Plan> oldPlans = new ArrayList<Plan>();
         
         // Initialize variables with non optimized plan.
         // Fails if a task has a weight bigger than any vehicle capacity.
@@ -113,7 +118,10 @@ public class CentralizedSolution implements CentralizedBehavior {
 			SelectInitialSolution();
 		} catch (Exception e) {
 			System.out.println(e.getMessage());
-		}     
+		}
+        
+
+        
 
         List<CentralizedPlan> neighbourPlans;
         CentralizedPlan bestNewPlan = new CentralizedPlan(new HashMap<CentralizedAction, CentralizedAction>(),
@@ -123,11 +131,13 @@ public class CentralizedSolution implements CentralizedBehavior {
         
         // loop until criterion reached
         for (int i = 0; i < maxIterations; i++) {
-     
+        	System.out.println("test1");
         	/* Find neighbours */
+
         	neighbourPlans = ChooseNeighbours();
         	System.out.println("Found " + neighbourPlans.size()+ " valid neighbours");
         	
+        	System.out.println("test2");
         	//for (CentralizedAction action_ : nextActionA.keySet()) {
         	//	System.out.println(time.get(nextActionA.get(action_)));
         	//}
@@ -143,7 +153,9 @@ public class CentralizedSolution implements CentralizedBehavior {
         	//experimenting
         	//this.currentPlan = bestNewPlan;
         	setCurrentPlan(bestNewPlan);
-        		        
+        	
+        	System.out.println("test3");
+	        
 	                
         }
         /* end */
@@ -152,8 +164,6 @@ public class CentralizedSolution implements CentralizedBehavior {
         long time_end = System.currentTimeMillis();
         long duration = time_end - time_start;
         System.out.println("The plan was generated in "+duration+" milliseconds.");
-        
-        plans = this.currentPlan.getPlan();
         
         return plans;
     }
@@ -191,7 +201,6 @@ public class CentralizedSolution implements CentralizedBehavior {
     		this.time.put(action, order);
     		this.vehicle.put(action, bigVehicle);
     		order++;
-    		
     		// fill arrays for delivery
     		this.nextActionA.put(action, correspondingDelivery.get(action));
     		this.nextActionA.put(correspondingDelivery.get(action), null);
@@ -217,7 +226,6 @@ public class CentralizedSolution implements CentralizedBehavior {
     
     private List<CentralizedPlan> ChooseNeighbours() {
     	resetCSPVariables();
-    	
     	/* Find neighbours to the current solution */
     	List<CentralizedPlan> neighbourPlans = new ArrayList<CentralizedPlan>();
     	
@@ -460,7 +468,7 @@ public class CentralizedSolution implements CentralizedBehavior {
     			if (time.get(nextActionA.get(actionTemp)) != (time.get(actionTemp) +1 )) {
     				System.out.println("Error: Constraint 3 reached, should not happen");
         			return false;} 
-    			//Constraint 5 
+    			//Contraint 5 
     			if (vehicle.get(nextActionA.get(actionTemp))!= vehicle.get(actionTemp)) {
     				System.out.println("Error: Constraint 5 reached, should not happen");
     				return false;}
@@ -471,7 +479,7 @@ public class CentralizedSolution implements CentralizedBehavior {
     	
     	for (Vehicle vehicleTemp : nextActionV.keySet()) {
     		if (nextActionV.get(vehicleTemp) != null) {
-	    		//Constraint 2
+	    		//Contraint 2
 	    		if (time.get(nextActionV.get(vehicleTemp))!=1) {
 	    			System.out.println("Error: Constraint 2 reached, should not happen");
 	    			return false;
@@ -498,7 +506,7 @@ public class CentralizedSolution implements CentralizedBehavior {
     		}
 
     	}
-    	//Constraint 6
+    	//Contraint 6
     	if ((nextActionA.size()+nextActionV.size())!= (actions.size()+vehicles.size())) {
     		System.out.println("Error: [Constraint 6] A plan was refused, sizes don't match");
     		return false;}
@@ -522,12 +530,19 @@ public class CentralizedSolution implements CentralizedBehavior {
     
     /*resets the global CSP variable to the current plan*/
     private void resetCSPVariables() {
+<<<<<<< HEAD
 
     	this.nextActionA = new HashMap<CentralizedAction, CentralizedAction>(this.currentPlan.getNextActionA());
     	this.nextActionV = new HashMap<Vehicle, CentralizedAction>(this.currentPlan.getNextActionV());
     	this.time = new HashMap<CentralizedAction, Integer>(this.currentPlan.getTime());
     	this.vehicle = new HashMap<CentralizedAction, Vehicle>(this.currentPlan.getVehicle());
 	
+=======
+    	this.nextActionA = this.currentPlan.getNextActionA();
+    	this.nextActionV = this.currentPlan.getNextActionV();
+    	this.time = this.currentPlan.getTime();
+    	this.vehicle = this.currentPlan.getVehicle();
+>>>>>>> parent of e783d20... Merge pull request #5 from schreven/valentin
     }
     /*set current plant*/
     private void setCurrentPlan(CentralizedPlan bestPlan) {
