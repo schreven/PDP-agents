@@ -2,6 +2,7 @@ package solution;
 
 import java.util.ArrayList;
 import java.util.HashMap;
+import java.util.List;
 //import java.util.List;
 import java.util.Map;
 //import java.util.Objects;
@@ -20,29 +21,31 @@ public class CentralizedPlan {
     final private Map<Vehicle, CentralizedAction> nextActionV;
     final private Map<CentralizedAction, Integer> time;
     final private Map<CentralizedAction, Vehicle> vehicle;
-    final ArrayList<Plan> plans;
-    final Double cost;
+    final private ArrayList<Plan> plans;
+    final private Double cost;
+    
     
 	public CentralizedPlan(Map<CentralizedAction, CentralizedAction> nextActionA,
 							Map<Vehicle, CentralizedAction> nextActionV,
 							Map<CentralizedAction, Integer> time,
-							Map<CentralizedAction, Vehicle> vehicle) {
+							Map<CentralizedAction, Vehicle> vehicle,
+							List<Vehicle> vehiclesList){
 		
 		this.nextActionA = new HashMap<CentralizedAction, CentralizedAction>(nextActionA);
 		this.nextActionV = new HashMap<Vehicle, CentralizedAction>(nextActionV);
 		this.time = new HashMap<CentralizedAction, Integer>(time);
 		this.vehicle = new HashMap<CentralizedAction, Vehicle>(vehicle);
-		this.plans = computePlan();
+		this.plans = computePlan(vehiclesList);
 		this.cost = computeCost();
 	}
 
 	
 	
-	private ArrayList<Plan> computePlan(){
+	private ArrayList<Plan> computePlan(List<Vehicle> vehiclesList){
+		//if (vehiclesList == null) return null;
 		ArrayList<Plan> plans = new ArrayList<Plan>();
 		CentralizedAction actionTemp;
-		
-		for (Vehicle vehicleTemp : this.nextActionV.keySet()) {
+		for (Vehicle vehicleTemp : vehiclesList) {
 			
 			City currentCity = vehicleTemp.getCurrentCity();
 			Plan plan = new Plan(currentCity);

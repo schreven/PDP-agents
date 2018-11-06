@@ -38,7 +38,7 @@ public class CentralizedSolution implements CentralizedBehavior {
     
 
     // max iteration allowed to find local optimal.
-    private final int maxIterations = 10;
+    private final int maxIterations = 10000;
     
     //vehicles and actions for the planning
     private List<Vehicle> vehicles;
@@ -57,6 +57,8 @@ public class CentralizedSolution implements CentralizedBehavior {
     //Map a pickup action with its delivery action
     private Map<CentralizedAction,CentralizedAction> correspondingDelivery;
 
+    //test
+    
     
     @Override
     public void setup(Topology topology, TaskDistribution distribution,
@@ -83,7 +85,8 @@ public class CentralizedSolution implements CentralizedBehavior {
         this.nextActionV = new HashMap<Vehicle, CentralizedAction>();
         this.time = new HashMap<CentralizedAction, Integer>();
         this.vehicle = new HashMap<CentralizedAction, Vehicle>();
-        this.currentPlan = new CentralizedPlan(this.nextActionA, this.nextActionV, this.time, this.vehicle);
+        //this.currentPlan; = new CentralizedPlan(this.nextActionA, this.nextActionV, 
+        //		this.time, this.vehicle, this.vehicles);
         this.correspondingDelivery = new HashMap<CentralizedAction,CentralizedAction>();
     }
 
@@ -91,8 +94,6 @@ public class CentralizedSolution implements CentralizedBehavior {
     @Override
     public List<Plan> plan(List<Vehicle> vehicles, TaskSet tasks) {
         long time_start = System.currentTimeMillis(); 	// save current time to measure computation duration
-        double totalCost = 0;							// total cost of a solution
-        double oldTotalCost = 0;						// total cost of a previous solution
        
         //instantiate
         this.vehicles = vehicles;
@@ -114,7 +115,8 @@ public class CentralizedSolution implements CentralizedBehavior {
         CentralizedPlan bestNewPlan = new CentralizedPlan(new HashMap<CentralizedAction, CentralizedAction>(),
         		new HashMap<Vehicle, CentralizedAction>(),
         		new HashMap<CentralizedAction, Integer>(),
-        		new HashMap<CentralizedAction, Vehicle>());
+        		new HashMap<CentralizedAction, Vehicle>(),
+        		new ArrayList<Vehicle>());
         
         // loop until criterion reached
         for (int i = 0; i < maxIterations; i++) {
@@ -196,7 +198,8 @@ public class CentralizedSolution implements CentralizedBehavior {
     		prevAction = correspondingDelivery.get(action);
     	}   
     	//set the current plan
-    	this.currentPlan = new CentralizedPlan(this.nextActionA,this.nextActionV, this.time, this.vehicle);
+    	this.currentPlan = new CentralizedPlan(this.nextActionA,this.nextActionV, 
+    			this.time, this.vehicle, this.vehicles);
     	
     	
     	if (!verifyConstraints()) {
@@ -310,7 +313,7 @@ public class CentralizedSolution implements CentralizedBehavior {
     	
     	if (verifyConstraints()) {
     		// verify if solution meet constraints
-    		newPlan = new CentralizedPlan(nextActionA, nextActionV, time, vehicle);
+    		newPlan = new CentralizedPlan(nextActionA, nextActionV, time, vehicle, this.vehicles);
     	}
     	else newPlan = null;
     	return newPlan;
@@ -382,7 +385,8 @@ public class CentralizedSolution implements CentralizedBehavior {
     	
     	if (verifyConstraints()) {
     		// verify if solution meet constraints
-    		newPlan = new CentralizedPlan(nextActionA, nextActionV, time, this.vehicle);
+    		
+    		newPlan = new CentralizedPlan(nextActionA, nextActionV, time, this.vehicle, this.vehicles);
     	}
     	else newPlan = null;
     	
@@ -414,6 +418,7 @@ public class CentralizedSolution implements CentralizedBehavior {
     	
     	
     	for (CentralizedPlan plan : neighbourPlans) {
+    		
     		//find the best plan
     		if (plan.getCost() < bestPlan.getCost()) {
     			bestPlan = plan;
@@ -439,12 +444,6 @@ public class CentralizedSolution implements CentralizedBehavior {
     		}
     		else if (nextActionA.get(actionTemp)!=null) {
     			// Constraint 3
-    			
-    			//PROBLEM HERE
-    			//System.out.println("test");
-    			//System.out.println(time.get(nextActionA.get(actionTemp)));
-    			//System.out.println(actionTemp);
-    			//System.out.println(time.get(actionTemp));
     			if (time.get(nextActionA.get(actionTemp)) != (time.get(actionTemp) +1 )) {
     				System.out.println("Error: Constraint 3 reached, should not happen");
         			return false;} 
@@ -453,9 +452,14 @@ public class CentralizedSolution implements CentralizedBehavior {
     				System.out.println("Error: Constraint 5 reached, should not happen");
     				return false;}
     		}
-    				
+    		//Constraint 8
+    		if(actionTemp.isPickup()) {
+    			if (time.get(actionTemp) > time.get(correspondingDelivery.get(actionTemp))) {
+    //				System.out.println("Warning: Constraint 5 reached");
+    				return false;}
+    			}
+    		}
     		
-    	}
     	
     	for (Vehicle vehicleTemp : nextActionV.keySet()) {
     		if (nextActionV.get(vehicleTemp) != null) {
@@ -530,7 +534,8 @@ public class CentralizedSolution implements CentralizedBehavior {
     /*set current plant*/
     private void setCurrentPlan(CentralizedPlan bestPlan) {
     	this.currentPlan = new CentralizedPlan(bestPlan.getNextActionA(),
-    						bestPlan.getNextActionV(), bestPlan.getTime(), bestPlan.getVehicle());
+    						bestPlan.getNextActionV(), bestPlan.getTime(), 
+    						bestPlan.getVehicle(), this.vehicles);
     	
     }
 }
