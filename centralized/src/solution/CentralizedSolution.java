@@ -123,12 +123,13 @@ public class CentralizedSolution implements CentralizedBehavior {
      
         	/* Find neighbours */
         	neighbourPlans = ChooseNeighbours(i);
-        	System.out.println("Found " + neighbourPlans.size()+ " valid neighbours");
+        	//System.out.println("Found " + neighbourPlans.size()+ " valid neighbours");
 
         	
         	/* Select the most promissing one */
         	bestNewPlan = LocalChoice(neighbourPlans, i);
-        	System.out.println("The cost of the the new plan is: " + bestNewPlan.getCost());
+        	//System.out.println("The cost of the the new plan is: " + bestNewPlan.getCost());
+        	System.out.println(bestNewPlan.getCost());
         	
         	//experimenting
         	//this.currentPlan = bestNewPlan;
@@ -141,7 +142,7 @@ public class CentralizedSolution implements CentralizedBehavior {
         // compute plan computation duration
         long time_end = System.currentTimeMillis();
         long duration = time_end - time_start;
-        System.out.println("The plan was generated in "+duration+" milliseconds.");
+        //System.out.println("The plan was generated in "+duration+" milliseconds.");
         
         plans = this.currentPlan.getPlan();
         
@@ -401,14 +402,12 @@ public class CentralizedSolution implements CentralizedBehavior {
     
     private CentralizedPlan LocalChoice(List<CentralizedPlan> neighbourPlans, Integer iter) {
     	CentralizedPlan bestPlan = neighbourPlans.get(0);
-    	
-    	// add current plan to list of compared with 40% chance
-  	
+    	  	
     	Random random = new Random();
-    	Double probAddCurrent = 0.3;
-    	Double probPickSecond = 0.4;
+    	Double probAddCurrent = 1.;
+    	Double probPickSecond = 0.;
     	Double probPickRandom = 0.5*(maxIterations-iter)/maxIterations;
-    	Double probIgnore = 0.;
+    	Double probIgnore = 0.2;
     	
     	if (random.nextFloat() < probAddCurrent) {
     		neighbourPlans.add(this.currentPlan);
