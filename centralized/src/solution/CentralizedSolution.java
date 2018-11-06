@@ -83,14 +83,12 @@ public class CentralizedSolution implements CentralizedBehavior {
         this.nextActionV = new HashMap<Vehicle, CentralizedAction>();
         this.time = new HashMap<CentralizedAction, Integer>();
         this.vehicle = new HashMap<CentralizedAction, Vehicle>();
-<<<<<<< HEAD
+
         this.currentPlan = new CentralizedPlan(new HashMap<CentralizedAction, CentralizedAction>(),
         				new HashMap<Vehicle, CentralizedAction>(), 
         				new HashMap<CentralizedAction, Integer>(),
         				new HashMap<CentralizedAction, Vehicle>());
-=======
-        this.currentPlan = new CentralizedPlan(this.nextActionA, this.nextActionV, this.time, this.vehicle);
->>>>>>> e783d20534cbe8b2e34bc2edc840416bb37b3e75
+
         this.correspondingDelivery = new HashMap<CentralizedAction,CentralizedAction>();
     }
 
@@ -524,31 +522,12 @@ public class CentralizedSolution implements CentralizedBehavior {
     
     /*resets the global CSP variable to the current plan*/
     private void resetCSPVariables() {
-<<<<<<< HEAD
 
     	this.nextActionA = new HashMap<CentralizedAction, CentralizedAction>(this.currentPlan.getNextActionA());
     	this.nextActionV = new HashMap<Vehicle, CentralizedAction>(this.currentPlan.getNextActionV());
     	this.time = new HashMap<CentralizedAction, Integer>(this.currentPlan.getTime());
     	this.vehicle = new HashMap<CentralizedAction, Vehicle>(this.currentPlan.getVehicle());
 	
-=======
-    	/*
-    	this.nextActionA.clear();
-    	this.nextActionV.clear();
-    	this.time.clear();
-    	this.vehicle.clear();
-    	
-    	this.nextActionA = this.currentPlan.getNextActionA();
-    	this.nextActionV = this.currentPlan.getNextActionV();
-    	this.time = this.currentPlan.getTime();
-    	this.vehicle = this.currentPlan.getVehicle();*/
-    	
-    	this.nextActionA = new HashMap<CentralizedAction, CentralizedAction>(this.currentPlan.getNextActionA());
-        this.nextActionV = new HashMap<Vehicle, CentralizedAction>(this.currentPlan.getNextActionV());
-        this.time = new HashMap<CentralizedAction, Integer>(this.currentPlan.getTime());
-        this.vehicle = new HashMap<CentralizedAction, Vehicle>(this.currentPlan.getVehicle());
-    	
->>>>>>> e783d20534cbe8b2e34bc2edc840416bb37b3e75
     }
     /*set current plant*/
     private void setCurrentPlan(CentralizedPlan bestPlan) {
