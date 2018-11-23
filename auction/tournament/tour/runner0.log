@@ -1,0 +1,16 @@
+06:48:06.414 FINE | Run command: java -Xmx1024m -classpath ../logist/logist.jar logist.LogistPlatform -o tournament\tour\auction-agent-main-44-test-agent-random-test.xml -a tournament\tour\agents.xml .\config\auction.xml agent-main-44-test agent-random-test
+06:48:06.519 CONFIG | Reading .\config\auction.xml
+06:48:06.568 CONFIG | Reading config\settings_auction.xml
+06:48:06.611 CONFIG | Reading config\topology\england.xml
+06:48:06.624 CONFIG | Reading tournament\tour\agents.xml
+06:48:11.124 CONFIG | Agent agent-main-44-test has 15/15 tasks.
+06:48:23.880 CONFIG | Wrote tournament\tour\auction-agent-main-44-test-agent-random-test.xml
+06:48:24.057 INFO | LogistPlatform finished successfully!
+06:48:24.061 FINE | Run command: java -Xmx1024m -classpath ../logist/logist.jar logist.LogistPlatform -o tournament\tour\auction-agent-random-test-agent-main-44-test.xml -a tournament\tour\agents.xml .\config\auction.xml agent-random-test agent-main-44-test
+06:48:24.164 CONFIG | Reading .\config\auction.xml
+06:48:24.215 CONFIG | Reading config\settings_auction.xml
+06:48:24.260 CONFIG | Reading config\topology\england.xml
+06:48:24.274 CONFIG | Reading tournament\tour\agents.xml
+06:48:26.367 CONFIG | Agent agent-main-44-test has 5/5 tasks.
+06:48:27.895 CONFIG | Wrote tournament\tour\auction-agent-random-test-agent-main-44-test.xml
+06:48:28.075 INFO | LogistPlatform finished successfully!
