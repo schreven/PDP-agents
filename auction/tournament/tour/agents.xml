@@ -5,11 +5,11 @@
 	<!--  - jar directory : .\agents/ -->
 	<!--  - generated on  : Fri Nov 23 18:47:04 CET 2018 -->
 	<agent name="agent-main-44-test">
-		<set class-path=".\agents\agent-main-44-test.jar"/>
+		<set class-path="./agents/agent-main-44-test.jar"/>
 		<set class-name="solution.AuctionSolution"/>
 	</agent>
 	<agent name="agent-random-test">
-		<set class-path=".\agents\agent-random-test.jar"/>
+		<set class-path="./agents/agent-random-test.jar"/>
 		<set class-name="template.AuctionTemplate"/>
 	</agent>
 </agents>

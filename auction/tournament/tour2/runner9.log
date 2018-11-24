@@ -1,0 +1,130 @@
+06:40:57.091 FINE | Run command: java -Xmx1024m -classpath /home/cyril/Documents/intelligent-agents-ex/logist/logist.jar logist.LogistPlatform -o tournament/tour2/auction-agent-random-test-agent-main-44-test-222.xml -a tournament/tour2/agents.xml config/auction.xml agent-random-test agent-main-44-test-222
+06:40:57.179 CONFIG | Reading config/auction.xml
+06:40:57.243 CONFIG | Reading config/settings_auction.xml
+06:40:57.310 CONFIG | Reading config/topology/england.xml
+06:40:57.328 CONFIG | Reading tournament/tour2/agents.xml
+06:40:57.345 CONFIG | test0
+06:40:57.361 CONFIG | test2
+06:40:57.362 CONFIG | 2751
+06:40:57.362 CONFIG | test2
+06:40:57.363 CONFIG | 2581
+06:40:57.363 CONFIG | test2
+06:40:57.363 CONFIG | test1
+06:40:57.363 CONFIG | 2709
+06:40:57.363 CONFIG | test2
+06:40:57.364 CONFIG | test1
+06:40:57.364 CONFIG | 2852
+06:40:57.364 CONFIG | test2
+06:40:57.365 CONFIG | test1
+06:40:57.365 CONFIG | 3093
+06:40:57.365 CONFIG | test2
+06:40:57.365 CONFIG | test1
+06:40:57.366 CONFIG | 2682
+06:40:57.366 CONFIG | test2
+06:40:57.366 CONFIG | test1
+06:40:57.366 CONFIG | 2761
+06:40:57.366 CONFIG | test2
+06:40:57.367 CONFIG | test1
+06:40:57.367 CONFIG | 2692
+06:40:57.367 CONFIG | test2
+06:40:57.367 CONFIG | test1
+06:40:57.368 CONFIG | 2935
+06:40:57.368 CONFIG | test2
+06:40:57.369 CONFIG | test1
+06:40:57.369 CONFIG | 2898
+06:40:57.369 CONFIG | test2
+06:40:57.370 CONFIG | test1
+06:40:57.370 CONFIG | 2814
+06:40:57.370 CONFIG | test2
+06:40:57.371 CONFIG | test1
+06:40:57.371 CONFIG | 2791
+06:40:57.371 CONFIG | test2
+06:40:57.371 CONFIG | test1
+06:40:57.371 CONFIG | 2809
+06:40:57.371 CONFIG | test2
+06:40:57.372 CONFIG | test1
+06:40:57.372 CONFIG | 2851
+06:40:57.372 CONFIG | test2
+06:40:57.373 CONFIG | test1
+06:40:57.373 CONFIG | 2897
+06:40:57.373 CONFIG | test2
+06:40:57.373 CONFIG | test1
+06:40:57.373 CONFIG | 2951
+06:40:57.373 CONFIG | test2
+06:40:57.374 CONFIG | 2852
+06:40:57.374 CONFIG | test2
+06:40:57.375 CONFIG | test1
+06:40:57.375 CONFIG | 2856
+06:40:57.375 CONFIG | test2
+06:40:57.376 CONFIG | test1
+06:40:57.376 CONFIG | 2966
+06:40:57.376 CONFIG | test2
+06:41:00.229 CONFIG | test1
+06:41:00.231 CONFIG | 2975
+06:41:01.352 CONFIG | Wrote tournament/tour2/auction-agent-random-test-agent-main-44-test-222.xml
+06:41:01.391 INFO | LogistPlatform finished successfully!
+06:41:01.410 FINE | Run command: java -Xmx1024m -classpath /home/cyril/Documents/intelligent-agents-ex/logist/logist.jar logist.LogistPlatform -o tournament/tour2/auction-agent-main-44-test-222-agent-random-test.xml -a tournament/tour2/agents.xml config/auction.xml agent-main-44-test-222 agent-random-test
+06:41:01.484 CONFIG | Reading config/auction.xml
+06:41:01.547 CONFIG | Reading config/settings_auction.xml
+06:41:01.607 CONFIG | Reading config/topology/england.xml
+06:41:01.628 CONFIG | Reading tournament/tour2/agents.xml
+06:41:01.646 CONFIG | test0
+06:41:01.662 CONFIG | test2
+06:41:01.663 CONFIG | test1
+06:41:01.664 CONFIG | 3415
+06:41:01.664 CONFIG | test2
+06:41:01.664 CONFIG | test1
+06:41:01.664 CONFIG | 3688
+06:41:01.664 CONFIG | test2
+06:41:01.665 CONFIG | test1
+06:41:01.665 CONFIG | 3650
+06:41:01.665 CONFIG | test2
+06:41:01.666 CONFIG | test1
+06:41:01.666 CONFIG | 3688
+06:41:01.666 CONFIG | test2
+06:41:01.666 CONFIG | test1
+06:41:01.666 CONFIG | 3810
+06:41:01.666 CONFIG | test2
+06:41:01.667 CONFIG | test1
+06:41:01.667 CONFIG | 3618
+06:41:01.667 CONFIG | test2
+06:41:01.668 CONFIG | test1
+06:41:01.668 CONFIG | 3674
+06:41:01.668 CONFIG | test2
+06:41:01.668 CONFIG | test1
+06:41:01.668 CONFIG | 3523
+06:41:01.668 CONFIG | test2
+06:41:01.672 CONFIG | 3386
+06:41:01.673 CONFIG | test2
+06:41:01.673 CONFIG | test1
+06:41:01.673 CONFIG | 3243
+06:41:01.673 CONFIG | test2
+06:41:01.673 CONFIG | 3017
+06:41:01.673 CONFIG | test2
+06:41:01.673 CONFIG | test1
+06:41:01.673 CONFIG | 3080
+06:41:01.673 CONFIG | test2
+06:41:01.673 CONFIG | 2935
+06:41:01.673 CONFIG | test2
+06:41:01.680 CONFIG | test1
+06:41:01.680 CONFIG | 2904
+06:41:01.680 CONFIG | test2
+06:41:01.680 CONFIG | test1
+06:41:01.681 CONFIG | 2994
+06:41:01.681 CONFIG | test2
+06:41:01.682 CONFIG | test1
+06:41:01.682 CONFIG | 2933
+06:41:01.682 CONFIG | test2
+06:41:01.682 CONFIG | test1
+06:41:01.682 CONFIG | 2889
+06:41:01.682 CONFIG | test2
+06:41:01.683 CONFIG | test1
+06:41:01.683 CONFIG | 2886
+06:41:01.683 CONFIG | test2
+06:41:01.683 CONFIG | test1
+06:41:01.683 CONFIG | 3022
+06:41:01.683 CONFIG | test2
+06:41:08.705 CONFIG | test1
+06:41:08.707 CONFIG | 3047
+06:41:10.386 CONFIG | Wrote tournament/tour2/auction-agent-main-44-test-222-agent-random-test.xml
+06:41:10.411 INFO | LogistPlatform finished successfully!
