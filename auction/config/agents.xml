@@ -17,11 +17,16 @@
 		<set class-name="solution.AuctionSolution"/>
 	</agent>
 
-<!--
+
 	<agent name="auction-main-44-222">
 		<set class-path="bin/"/>
-		<set class-name="solution.AuctionSolution"/>
+		<set class-name="solution.AuctionSolution2"/>
 	</agent>
--->
+
+	<agent name="auction-main-44-333">
+		<set class-path="bin/"/>
+		<set class-name="solution.AuctionSolution3"/>
+	</agent>
+
 
 </agents>

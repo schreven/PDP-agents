@@ -1,0 +1,16 @@
+03:10:52.153 FINE | Run command: java -Xmx1024m -classpath /home/cyril/Documents/intelligent-agents-ex/logist/logist.jar logist.LogistPlatform -o tournament/tour3/auction-agent-main-44-test-222-agent-main-44-test-333.xml -a tournament/tour3/agents.xml config/auction.xml agent-main-44-test-222 agent-main-44-test-333
+03:10:52.248 CONFIG | Reading config/auction.xml
+03:10:52.324 CONFIG | Reading config/settings_auction.xml
+03:10:52.398 CONFIG | Reading config/topology/england.xml
+03:10:52.419 CONFIG | Reading tournament/tour3/agents.xml
+03:10:52.438 CONFIG | test0
+03:11:01.896 CONFIG | Wrote tournament/tour3/auction-agent-main-44-test-222-agent-main-44-test-333.xml
+03:11:01.915 INFO | LogistPlatform finished successfully!
+03:11:01.922 FINE | Run command: java -Xmx1024m -classpath /home/cyril/Documents/intelligent-agents-ex/logist/logist.jar logist.LogistPlatform -o tournament/tour3/auction-agent-main-44-test-333-agent-main-44-test-222.xml -a tournament/tour3/agents.xml config/auction.xml agent-main-44-test-333 agent-main-44-test-222
+03:11:02.000 CONFIG | Reading config/auction.xml
+03:11:02.066 CONFIG | Reading config/settings_auction.xml
+03:11:02.132 CONFIG | Reading config/topology/england.xml
+03:11:02.154 CONFIG | Reading tournament/tour3/agents.xml
+03:11:02.173 CONFIG | test0
+03:11:10.159 CONFIG | Wrote tournament/tour3/auction-agent-main-44-test-333-agent-main-44-test-222.xml
+03:11:10.180 INFO | LogistPlatform finished successfully!

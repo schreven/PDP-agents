@@ -1,4 +1,4 @@
-package solution2;
+package solution3;
 
 //the list of imports
 import java.util.ArrayList;
@@ -17,7 +17,7 @@ import logist.task.TaskDistribution;
 import logist.task.TaskSet;
 import logist.topology.Topology;
 import logist.topology.Topology.City;
-import solution2.AuctionAction;
+//import solution3.AuctionAction;
 
 /**
  * A very simple auction agent that assigns all tasks to its first vehicle and
@@ -25,7 +25,7 @@ import solution2.AuctionAction;
  * 
  */
 @SuppressWarnings("unused")
-public class AuctionSolution2 implements AuctionBehavior {
+public class AuctionSolution3 implements AuctionBehavior {
 
 	private Random random;
 	private Topology topology;
@@ -39,9 +39,6 @@ public class AuctionSolution2 implements AuctionBehavior {
 	private int newPickupPosition;
 	private int newDeliveryPosition;
 	
-	private int opponentVehicleId;
-	private List<City> opponentCurrentCities;
-	
 	private double myProfit;
 	private double opponentProfit;
 	
@@ -52,18 +49,14 @@ public class AuctionSolution2 implements AuctionBehavior {
 	private List<Long> opponentBids;
 	private int opponentId;
 	
+	private List<City> opponentCities;
 	
-	//private List<Task> myTasks;
-	//private List<Task> opponentTasks;
+	private final int aggressiveRounds = 3;
+	
 
 	@Override
 	public void setup(Topology topology, TaskDistribution distribution,
 			Agent agent) {
-		//long seed = -9019554669489983951L * myVehicles.get(0).homeCity().hashCode() * agent.id();
-		long seed = 1;
-		this.random = new Random(seed);
-		
-		System.out.println("test0");
 
 		this.topology = topology;
 		this.distribution = distribution;
@@ -72,17 +65,15 @@ public class AuctionSolution2 implements AuctionBehavior {
 		this.myVehicleActions = new HashMap<Vehicle, List<AuctionAction>>();
 		this.myCurrentCities = new HashMap<Vehicle, City>();
 		
+		long seed = -9019554669489983951L * myVehicles.get(0).homeCity().hashCode() * agent.id();
+		this.random = new Random(seed);
+		
 		//set myCurrentCities
 		for (Vehicle vehicle: myVehicles) {
 			this.myVehicleActions.put(vehicle, new ArrayList<AuctionAction>());
 			this.myCurrentCities.put(vehicle, vehicle.homeCity());
 		}
-		this.opponentCurrentCities = new ArrayList<City>();
-		
-		//Randomly setting opponentCurrentCities
-		for (int i = 0; i<opponentVehicleAmount; i++) {
-			this.opponentCurrentCities.add(topology.cities().get(random.nextInt(myVehicles.size())));
-		}
+		this.opponentCities = new ArrayList<City>();
 		
 		this.myProfit = 0;
 		this.opponentProfit = 0;
@@ -131,15 +122,15 @@ public class AuctionSolution2 implements AuctionBehavior {
 			myVehicleActions.put(myChosenVehicle, l);
 			//myCurrentCities.put(myChosenVehicle, previous.deliveryCity);
 			myProfit += bids[winner];
+			myBids.add(bids[agent.id()]);
 			
 		}
 		else {
 			//opponentTasks.add(previous);
-			//opponentCurrentCities.set(opponentVehicleId, previous.deliveryCity);
+			opponentCities.add(previous.deliveryCity);
+			opponentCities.add(previous.pickupCity);
 			opponentProfit += bids[winner];
 		}
-		
-		myBids.add(bids[agent.id()]);
 		opponentBids.add(bids[opponentId]);
 	}
 	
@@ -209,23 +200,28 @@ public class AuctionSolution2 implements AuctionBehavior {
 		}
 		
 		
-		//find opponent vehicle performing task for the lowest cost, and corresponding cost
-		
-		double opponentMarginalCost = inf;
-		for (int i = 0; i<opponentVehicleAmount; i++) {
-			long distanceSum = task.pickupCity.distanceUnitsTo(task.deliveryCity)
-					+ opponentCurrentCities.get(i).distanceUnitsTo(task.pickupCity);
-			
-			double tempMarginalCost = Measures.unitsToKM(distanceSum
-							* myVehicles.get(0).costPerKm());
-			if (tempMarginalCost<opponentMarginalCost) {
-				opponentMarginalCost = tempMarginalCost;
-				opponentVehicleId = i;
+		//find lowbound costs for opponents marginal cost
+		/*
+		long lowOpponentPickupDistance = 0;
+		long lowOpponentDeliveryDistance = 0;
+		if (opponentCities.size()==0) {
+			lowOpponentPickupDistance = (long) inf;
+			lowOpponentDeliveryDistance = (long) inf;
+			for (City opponentCity: opponentCities) {
+				if (task.pickupCity.distanceUnitsTo(opponentCity)<lowOpponentPickupDistance)
+					lowOpponentPickupDistance =  task.pickupCity.distanceUnitsTo(opponentCity);
+				
+				if (task.deliveryCity.distanceUnitsTo(opponentCity)<lowOpponentDeliveryDistance)
+					lowOpponentDeliveryDistance =  task.deliveryCity.distanceUnitsTo(opponentCity);
+				
 			}
+
 		}
+		long distanceSum = lowOpponentPickupDistance + lowOpponentDeliveryDistance;
 		
-		
-		double bid;
+		double opponentCost = Measures.unitsToKM(distanceSum
+						* myVehicles.get(0).costPerKm());
+		*/
 		/*
 		//Limit opponent winnings if his marginal cost is lower
 		if (myMarginalCost>=opponentMarginalCost) {
@@ -238,8 +234,18 @@ public class AuctionSolution2 implements AuctionBehavior {
 		}
 		*/
 		
-		long movingAverage = calculateAverage(opponentBids.subList(Math.max(opponentBids.size() - 3, 0), opponentBids.size()));
-		bid = (1./4)*myMarginalCost + (3./4)*movingAverage;
+		double bid;
+		if(myBids.size()<=aggressiveRounds) {
+			bid = 0.5*myMarginalCost +0.5*(myBids.size()/aggressiveRounds);
+		}
+		else if (opponentBids.size()>=1) {
+			long movingAverage = calculateAverage(opponentBids.subList(Math.max(opponentBids.size() - 3, 0), opponentBids.size()));
+			bid = (1./4)*myMarginalCost + (3./4)*movingAverage;
+		}
+		else {
+			double ratio = 1.0 + (random.nextDouble() * 0.05 * task.id);
+			bid = ratio*myMarginalCost;
+		}
 		
 		
 		
