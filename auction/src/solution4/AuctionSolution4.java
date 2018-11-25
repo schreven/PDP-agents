@@ -1,4 +1,4 @@
-package solution2;
+package solution4;
 
 //the list of imports
 import java.util.ArrayList;
@@ -25,7 +25,7 @@ import solution2.AuctionAction;
  * 
  */
 @SuppressWarnings("unused")
-public class AuctionSolution2 implements AuctionBehavior {
+public class AuctionSolution4 implements AuctionBehavior {
 
 	private Random random;
 	private Topology topology;
@@ -51,7 +51,6 @@ public class AuctionSolution2 implements AuctionBehavior {
 	private List<Long> myBids;
 	private List<Long> opponentBids;
 	private int opponentId;
-	
 	
 	//private List<Task> myTasks;
 	//private List<Task> opponentTasks;
@@ -96,6 +95,9 @@ public class AuctionSolution2 implements AuctionBehavior {
 	public void auctionResult(Task previous, int winner, Long[] bids) {
 	
 		if (winner == agent.id()) {
+			
+			System.out.println("won!");
+			
 			List<AuctionAction> l = myVehicleActions.get(myChosenVehicle);
 			
 			//Set the new pickup in the vehicles list
@@ -132,6 +134,9 @@ public class AuctionSolution2 implements AuctionBehavior {
 			
 		}
 		else {
+			
+			System.out.println("lost, opponent bid "+bids[winner]);
+			
 			//opponentTasks.add(previous);
 			//opponentCurrentCities.set(opponentVehicleId, previous.deliveryCity);
 			opponentProfit += bids[winner];
@@ -236,12 +241,17 @@ public class AuctionSolution2 implements AuctionBehavior {
 		}
 		*/
 		
-		long movingAverage = calculateAverage(opponentBids.subList(Math.max(opponentBids.size() - 3, 0), opponentBids.size()));
+		//double myMarginalCost_tmp = myMarginalCost;
+		myMarginalCost = useTaskDistrubution(myMarginalCost, task.pickupCity, myVehicleActions.get(myChosenVehicle));
+		
+		long movingAverage = calculateAverage(opponentBids.subList(Math.max(opponentBids.size() - 3, 0), opponentBids.size()));		
+		
 		bid = (1./4)*myMarginalCost + (3./4)*movingAverage;
 		
+		//bid = useTaskDistrubution(bid, task.pickupCity, myVehicleActions.get(myChosenVehicle));
 		
+		//System.out.println("cost: " + (int)myMarginalCost + " myMarginalCost: " + (int)bid);
 		
-		//bid = myMarginalCost;
 		return (long) Math.round(bid);
 	}
 	
@@ -313,4 +323,39 @@ public class AuctionSolution2 implements AuctionBehavior {
 		return true;
 
 	}
+	
+	private double useTaskDistrubution(double initialBid, City taskPickUpCity, List<AuctionAction> currentCities) {
+		// reduces bid if there is a high chance that a task to the taskPickUpCity happens. (or if we already have a task to go to this city?)
+		
+		double prob = 0;
+		int cityCount = 0;
+		
+		// the more task there are, the less chances there is to have a desired task in the future
+		// double prob_threshold = 1/(1+myBids.size());		
+		double prob_threshold = 0.1;
+				
+		// compute the joint probability that a task from a destination city to the desired pickUpCity will be asked.
+		for (AuctionAction action : currentCities) {
+			if (action.isPickup()) continue;
+			
+			// however, if we already have a task to go there, aggressively bet to be sure to have the task
+			// if (action.getCity().id == taskPickUpCity.id) return initialBid*0.75;
+			
+			City deliveryCity = action.getCity();
+			
+			prob += distribution.probability(deliveryCity, taskPickUpCity);		
+			cityCount++;
+		}
+		
+		if (cityCount != 0) prob /= cityCount;
+		
+		System.out.println("joint prob: "+prob);		
+		
+		// Modify the bid according to the probability
+		// if (prob > prob_threshold) return initialBid *= (1-prob_threshold);
+		if (prob > prob_threshold) return initialBid *= 0.8;
+				
+		return initialBid;
+	}
+	
 }

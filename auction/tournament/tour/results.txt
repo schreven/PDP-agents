@@ -1,0 +1,13 @@
+### auction.xml ###
+       Agents        |  Win - Draw - Lose   |      YourName2       |      YourName4       |      YourName3       |       YourName       |      YourName5      
+     YourName2       |      7 - 0 - 1       |          -           |  WIN (7989 : 4445)   |  WIN (9260 : 1498)   | WIN (40485 : -1267)  |  WIN (53160 : 5550) 
+     YourName4       |      7 - 0 - 1       |  WIN (9121 : 4231)   |          -           |  WIN (8953 : 1345)   | WIN (40206 : -1267)  |  WIN (52919 : 5550) 
+     YourName3       |      4 - 0 - 4       |  LOSE (2373 : 3199)  |  LOSE (2987 : 4300)  |          -           | WIN (33973 : -1267)  |  WIN (46426 : 5550) 
+      YourName       |      1 - 0 - 7       | LOSE (-841 : 35752)  | LOSE (-1034 : 35593) | LOSE (-2017 : 35463) |          -           |  LOSE (5258 : 8727) 
+     YourName5       |      1 - 0 - 7       | LOSE (4734 : 63115)  | LOSE (4734 : 62928)  | LOSE (4734 : 58382)  |  LOSE (6354 : 6609)  |          -          
+
+First company results
+  # wins   : 10
+  # draws  : 0
+  # losses : 10
+

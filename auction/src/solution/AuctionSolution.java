@@ -37,6 +37,11 @@ public class AuctionSolution implements AuctionBehavior {
 	private List<Long[]> previousBids;
 	private List<Integer> occupiedCities;
 	private List<Integer> winnerList;
+	private City nextCity;
+	
+	private final double Maxpercentage = 0.2;
+	private final double deltaPercentage = 0.04;
+	private double percentage;
 
 	@Override
 	public void setup(Topology topology, TaskDistribution distribution,
@@ -51,6 +56,8 @@ public class AuctionSolution implements AuctionBehavior {
 		this.previousBids = new ArrayList<Long[]>();
 		this.occupiedCities = new ArrayList<Integer>();
 		this.winnerList = new ArrayList<Integer>();
+		this.percentage = 0;
+		this.nextCity = null;
 
 		long seed = -9019554669489983951L * currentCity.hashCode() * agent.id();
 		this.random = new Random(seed);
@@ -60,6 +67,16 @@ public class AuctionSolution implements AuctionBehavior {
 	public void auctionResult(Task previous, int winner, Long[] bids) {
 		if (winner == agent.id()) {
 			currentCity = previous.deliveryCity;
+			
+			if (percentage < 0) percentage = 0;
+			percentage += deltaPercentage;
+			if (percentage > Maxpercentage) percentage = Maxpercentage;
+			
+			//System.out.println("won");
+		}
+		else {
+			percentage -= deltaPercentage;
+			//System.out.println("lost (winner bet "+bids[winner]+")");
 		}
 		
 		// save info about last auction
@@ -71,6 +88,8 @@ public class AuctionSolution implements AuctionBehavior {
 	
 	@Override
 	public Long askPrice(Task task) {
+		
+		double bid_tmp = 0;
 
 		if (vehicle.capacity() < task.weight) return null;
 
@@ -81,9 +100,14 @@ public class AuctionSolution implements AuctionBehavior {
 		double marginalCost = Measures.unitsToKM(distanceSum
 				* vehicle.costPerKm());
 
-		//From template: ask for marginal cost + random profit 		
-		double ratio = 1.0 + (random.nextDouble() * 0.05 * task.id);
-		double bid = ratio * marginalCost;
+		//Ask for marginal cost + percentage
+		double bid = marginalCost * (1 + percentage);
+		
+		bid_tmp = bid;
+		
+		// if we won last auction by betting lower, bet low again
+		//if (nextCity != null && task.pickupCity.id == nextCity.id) return (long) Math.round(marginalCost);
+
 
 		/* ANALYSIS OF REWARD PROBABILITIES */
 		// Compute the expected profit of the destination city. If it is high enough, we might reduce the bid to
@@ -104,39 +128,33 @@ public class AuctionSolution implements AuctionBehavior {
 		}
 		// If the expected profit is higher than the reward of the auctioned task: 
 		// (i.e. the reward might increase if we win!)
-		if (expectedReward >= bid) {
+		if (expectedReward >= marginalCost) {
 			// we reduce the bid by the same ratio between the expected reward and the reward
-			double diff = bid/expectedReward;
-			bid -= bid*diff;
+			//double diff = bid/expectedReward;
+			//bid -= bid*diff;
+			City nextCity = task.deliveryCity;
+			bid = marginalCost*(1-percentage);
 		}
-		
-		/* ANALYSIS OF COMPETITORS */
-		// look at competitors bid and always bid in the same range.
-		// figure where the winners are and go where the expected rewards are high AND where there are less agents.
-		// we assume that a winner is at the destination city of the task he won.
 				
-		// TODO, using values saved in global
-		
 		// security to avoid deficit
-		if (bid < marginalCost) bid = marginalCost;
+		//if (bid < marginalCost) bid = marginalCost;
+		
+		//System.out.println("cost: " + (int)marginalCost + " bid: "+ (int)bid_tmp + " asked: " + (int)bid + " perc: "+percentage);
 		
 		return (long) Math.round(bid);
 	}
 
 	@Override
 	public List<Plan> plan(List<Vehicle> vehicles, TaskSet tasks) {
-		
-		System.out.println("Agent " + agent.name() + " has "+agent.getTotalTasks()+"/"+tasks.size()+" tasks.");
-		
-		// TODO replace the naive plan by an optimized one (centralized tp?)
-
+				
 		Plan planVehicle1 = naivePlan(vehicle, tasks);
 
 		List<Plan> plans = new ArrayList<Plan>();
 		plans.add(planVehicle1);
 		while (plans.size() < vehicles.size())
 			plans.add(Plan.EMPTY);
-
+		
+			
 		return plans;
 	}
 
