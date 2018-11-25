@@ -5,13 +5,11 @@
 
 	<!-- #### AUCTION AGENTS ### -->
 
-
-
-
 	<agent name="auction-main-44">
 		<set class-path="bin/"/>
 		<set class-name="solution.AuctionSolution"/>
 	</agent>
+	
 	<!--
 	<agent name="auction-random">
 		<set class-path="bin/"/>
