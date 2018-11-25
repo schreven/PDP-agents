@@ -398,7 +398,7 @@ public class AuctionSolution implements AuctionBehavior {
 		
 		// the more task there are, the less chances there is to have a desired task in the future
 		// double prob_threshold = 1/(1+myBids.size());		
-		double prob_threshold = 0.1;
+		// double prob_threshold = 0.1;
 				
 		// compute the joint probability that a task from a destination city to the desired pickUpCity will be asked.
 		for (AuctionAction action : currentCities) {
@@ -415,13 +415,13 @@ public class AuctionSolution implements AuctionBehavior {
 		
 		if (cityCount != 0) prob /= cityCount;
 		
-		System.out.println("joint prob: "+prob);		
+		//System.out.println("joint prob: "+prob);		
 		
 		// Modify the bid according to the probability
 		// if (prob > prob_threshold) return initialBid *= (1-prob_threshold);
-		if (prob > prob_threshold) return initialBid *= 0.8;
+		// if (prob > prob_threshold) return initialBid *= 0.8;
 				
-		return initialBid;
+		return initialBid * (1-prob);
 	}
 	
 }
