@@ -5,12 +5,12 @@
 	<!--  - jar directory : agents/ -->
 	<!--  - generated on  : Sun Nov 25 02:06:45 CET 2018 -->
 
-	<agent name="agent-main-44-test-222">
-		<set class-path="agents/agent-main-44-test-222.jar"/>
-		<set class-name="solution2.AuctionSolution2"/>
+	<agent name="agent-main-44">
+		<set class-path="agents/agent-main-44.jar"/>
+		<set class-name="solution.AuctionSolution"/>
 	</agent>
-	<agent name="agent-main-44-test-333">
-		<set class-path="agents/agent-main-44-test-333.jar"/>
-		<set class-name="solution3.AuctionSolution3"/>
+	<agent name="agent-main-44-test">
+		<set class-path="agents/agent-main-44-test.jar"/>
+		<set class-name="solution2.AuctionSolution2"/>
 	</agent>
 </agents>

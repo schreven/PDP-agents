@@ -1,16 +1,256 @@
-03:10:52.153 FINE | Run command: java -Xmx1024m -classpath /home/cyril/Documents/intelligent-agents-ex/logist/logist.jar logist.LogistPlatform -o tournament/tour3/auction-agent-main-44-test-222-agent-main-44-test-333.xml -a tournament/tour3/agents.xml config/auction.xml agent-main-44-test-222 agent-main-44-test-333
-03:10:52.248 CONFIG | Reading config/auction.xml
-03:10:52.324 CONFIG | Reading config/settings_auction.xml
-03:10:52.398 CONFIG | Reading config/topology/england.xml
-03:10:52.419 CONFIG | Reading tournament/tour3/agents.xml
-03:10:52.438 CONFIG | test0
-03:11:01.896 CONFIG | Wrote tournament/tour3/auction-agent-main-44-test-222-agent-main-44-test-333.xml
-03:11:01.915 INFO | LogistPlatform finished successfully!
-03:11:01.922 FINE | Run command: java -Xmx1024m -classpath /home/cyril/Documents/intelligent-agents-ex/logist/logist.jar logist.LogistPlatform -o tournament/tour3/auction-agent-main-44-test-333-agent-main-44-test-222.xml -a tournament/tour3/agents.xml config/auction.xml agent-main-44-test-333 agent-main-44-test-222
-03:11:02.000 CONFIG | Reading config/auction.xml
-03:11:02.066 CONFIG | Reading config/settings_auction.xml
-03:11:02.132 CONFIG | Reading config/topology/england.xml
-03:11:02.154 CONFIG | Reading tournament/tour3/agents.xml
-03:11:02.173 CONFIG | test0
-03:11:10.159 CONFIG | Wrote tournament/tour3/auction-agent-main-44-test-333-agent-main-44-test-222.xml
-03:11:10.180 INFO | LogistPlatform finished successfully!
+10:13:51.570 FINE | Run command: java -Xmx1024m -classpath /home/cyril/Documents/intelligent-agents-ex/logist/logist.jar logist.LogistPlatform -o tournament/tour3/auction-agent-main-44-agent-main-44-test.xml -a tournament/tour3/agents.xml config/auction.xml agent-main-44 agent-main-44-test
+10:13:51.717 CONFIG | Reading config/auction.xml
+10:13:51.804 CONFIG | Reading config/settings_auction.xml
+10:13:51.879 CONFIG | Reading config/topology/england.xml
+10:13:51.903 CONFIG | Reading tournament/tour3/agents.xml
+10:13:51.922 CONFIG | test0
+10:13:51.936 CONFIG | joint prob: 0.0
+10:13:51.938 CONFIG | 5
+10:13:51.938 CONFIG | won!
+10:13:51.940 CONFIG | joint prob: 0.1547124664111761
+10:13:51.941 CONFIG | 5
+10:13:51.941 CONFIG | won!
+10:13:51.941 CONFIG | joint prob: 0.03339199954322591
+10:13:51.942 CONFIG | 5
+10:13:51.942 CONFIG | won!
+10:13:51.942 CONFIG | joint prob: 0.04618660565585852
+10:13:51.943 CONFIG | 5
+10:13:51.943 CONFIG | won!
+10:13:51.943 CONFIG | joint prob: 0.09498418748504431
+10:13:51.944 CONFIG | 5
+10:13:51.945 CONFIG | won!
+10:13:51.945 CONFIG | joint prob: 0.0995066711204796
+10:13:51.946 CONFIG | 5
+10:13:51.946 CONFIG | won!
+10:13:51.949 CONFIG | joint prob: 0.06112924963366589
+10:13:51.953 CONFIG | 5
+10:13:51.954 CONFIG | lost, opponent bid 870
+10:13:51.954 CONFIG | joint prob: 0.09856773389305822
+10:13:51.955 CONFIG | 5
+10:13:51.955 CONFIG | won!
+10:13:51.956 CONFIG | joint prob: 0.15564207335556196
+10:13:51.957 CONFIG | 5
+10:13:51.957 CONFIG | lost, opponent bid 763
+10:13:51.957 CONFIG | joint prob: 0.04951817791188566
+10:13:51.958 CONFIG | 5
+10:13:51.959 CONFIG | won!
+10:13:51.960 CONFIG | joint prob: 0.09055955401255009
+10:13:51.960 CONFIG | 5
+10:13:51.960 CONFIG | won!
+10:13:51.961 CONFIG | joint prob: 0.05389990023880146
+10:13:51.962 CONFIG | 5
+10:13:51.962 CONFIG | won!
+10:13:51.963 CONFIG | joint prob: 0.07349383612892917
+10:13:51.964 CONFIG | 5
+10:13:51.964 CONFIG | won!
+10:13:51.965 CONFIG | joint prob: 0.0
+10:13:51.966 CONFIG | 5
+10:13:51.966 CONFIG | won!
+10:13:51.967 CONFIG | joint prob: 0.05527335294378739
+10:13:51.969 CONFIG | 5
+10:13:51.969 CONFIG | won!
+10:13:51.970 CONFIG | joint prob: 0.11464203576433252
+10:13:51.971 CONFIG | 5
+10:13:51.971 CONFIG | won!
+10:13:51.972 CONFIG | joint prob: 0.08072441616445121
+10:13:51.977 CONFIG | 5
+10:13:51.977 CONFIG | won!
+10:13:51.979 CONFIG | joint prob: 0.05689323991640853
+10:13:51.980 CONFIG | 5
+10:13:51.981 CONFIG | lost, opponent bid 455
+10:13:51.983 CONFIG | joint prob: 0.12781442360787543
+10:13:51.984 CONFIG | 5
+10:13:51.984 CONFIG | lost, opponent bid 227
+10:13:51.986 CONFIG | joint prob: 0.08492754703547852
+10:13:51.987 CONFIG | 5
+10:13:51.987 CONFIG | won!
+10:13:51.990 CONFIG | joint prob: 0.08508536213528692
+10:13:51.992 CONFIG | 5
+10:13:51.992 CONFIG | won!
+10:13:51.995 CONFIG | joint prob: 0.0774952154001893
+10:13:51.997 CONFIG | 5
+10:13:51.997 CONFIG | lost, opponent bid 498
+10:13:51.999 CONFIG | joint prob: 0.080134702567754
+10:13:51.999 CONFIG | 5
+10:13:51.999 CONFIG | won!
+10:13:52.002 CONFIG | joint prob: 0.09177381254949328
+10:13:52.003 CONFIG | 5
+10:13:52.003 CONFIG | won!
+10:13:52.006 CONFIG | joint prob: 0.09071745846621239
+10:13:52.008 CONFIG | 5
+10:13:52.008 CONFIG | won!
+10:13:52.011 CONFIG | joint prob: 0.09072707454439317
+10:13:52.012 CONFIG | 5
+10:13:52.012 CONFIG | won!
+10:13:52.016 CONFIG | joint prob: 0.10784267050926141
+10:13:52.016 CONFIG | 5
+10:13:52.016 CONFIG | won!
+10:13:52.020 CONFIG | joint prob: 0.07599928231559512
+10:13:52.021 CONFIG | 5
+10:13:52.021 CONFIG | lost, opponent bid 196
+10:13:52.024 CONFIG | joint prob: 0.08584315549196146
+10:13:52.028 CONFIG | 5
+10:13:52.029 CONFIG | won!
+10:13:52.034 CONFIG | joint prob: 0.08892514480563726
+10:13:52.035 CONFIG | 5
+10:13:52.036 CONFIG | won!
+10:13:52.040 CONFIG | joint prob: 0.0963385780181441
+10:13:52.041 CONFIG | 5
+10:13:52.041 CONFIG | won!
+10:13:52.049 CONFIG | joint prob: 0.08440058779921683
+10:13:52.050 CONFIG | 5
+10:13:52.050 CONFIG | lost, opponent bid 104
+10:13:52.054 CONFIG | joint prob: 0.10514615225121625
+10:13:52.054 CONFIG | 5
+10:13:52.054 CONFIG | won!
+10:13:52.057 CONFIG | joint prob: 0.098119203180026
+10:13:52.058 CONFIG | 5
+10:13:52.058 CONFIG | won!
+10:13:52.062 CONFIG | joint prob: 0.07362578675821703
+10:13:52.062 CONFIG | 5
+10:13:52.062 CONFIG | won!
+10:13:52.067 CONFIG | joint prob: 0.12542526191560618
+10:13:52.067 CONFIG | 5
+10:13:52.068 CONFIG | won!
+10:13:52.072 CONFIG | joint prob: 0.09863182183572974
+10:13:52.073 CONFIG | 5
+10:13:52.073 CONFIG | lost, opponent bid 92
+10:13:52.077 CONFIG | joint prob: 0.10139693324653815
+10:13:52.078 CONFIG | 5
+10:13:52.078 CONFIG | won!
+10:13:52.083 CONFIG | joint prob: 0.09976295938980137
+10:13:52.083 CONFIG | 5
+10:13:52.084 CONFIG | won!
+10:13:52.089 CONFIG | joint prob: 0.08493470762001325
+10:13:52.090 CONFIG | 5
+10:13:52.090 CONFIG | won!
+10:13:52.117 CONFIG | Wrote tournament/tour3/auction-agent-main-44-agent-main-44-test.xml
+10:13:52.134 INFO | LogistPlatform finished successfully!
+10:13:52.147 FINE | Run command: java -Xmx1024m -classpath /home/cyril/Documents/intelligent-agents-ex/logist/logist.jar logist.LogistPlatform -o tournament/tour3/auction-agent-main-44-test-agent-main-44.xml -a tournament/tour3/agents.xml config/auction.xml agent-main-44-test agent-main-44
+10:13:52.236 CONFIG | Reading config/auction.xml
+10:13:52.307 CONFIG | Reading config/settings_auction.xml
+10:13:52.378 CONFIG | Reading config/topology/england.xml
+10:13:52.405 CONFIG | Reading tournament/tour3/agents.xml
+10:13:52.428 CONFIG | test0
+10:13:52.454 CONFIG | joint prob: 0.0
+10:13:52.456 CONFIG | 5
+10:13:52.456 CONFIG | lost, opponent bid 548
+10:13:52.457 CONFIG | joint prob: 0.0
+10:13:52.458 CONFIG | 5
+10:13:52.458 CONFIG | won!
+10:13:52.459 CONFIG | joint prob: 0.0071749345355914965
+10:13:52.460 CONFIG | 5
+10:13:52.460 CONFIG | won!
+10:13:52.460 CONFIG | joint prob: 0.06927990848378777
+10:13:52.461 CONFIG | 5
+10:13:52.461 CONFIG | lost, opponent bid 804
+10:13:52.461 CONFIG | joint prob: 0.06352512369670803
+10:13:52.462 CONFIG | 5
+10:13:52.462 CONFIG | won!
+10:13:52.462 CONFIG | joint prob: 0.047719328707641756
+10:13:52.463 CONFIG | 5
+10:13:52.463 CONFIG | won!
+10:13:52.463 CONFIG | joint prob: 0.04025800722980201
+10:13:52.464 CONFIG | 5
+10:13:52.464 CONFIG | won!
+10:13:52.465 CONFIG | joint prob: 0.09884160177094417
+10:13:52.467 CONFIG | 5
+10:13:52.467 CONFIG | lost, opponent bid 363
+10:13:52.468 CONFIG | joint prob: 0.0
+10:13:52.470 CONFIG | 5
+10:13:52.470 CONFIG | lost, opponent bid 796
+10:13:52.470 CONFIG | joint prob: 0.0
+10:13:52.472 CONFIG | 5
+10:13:52.472 CONFIG | lost, opponent bid 503
+10:13:52.473 CONFIG | joint prob: 0.09971746634473058
+10:13:52.475 CONFIG | 5
+10:13:52.475 CONFIG | won!
+10:13:52.476 CONFIG | joint prob: 0.06504723295569977
+10:13:52.477 CONFIG | 5
+10:13:52.477 CONFIG | won!
+10:13:52.477 CONFIG | joint prob: 0.03343510483024386
+10:13:52.478 CONFIG | 5
+10:13:52.478 CONFIG | won!
+10:13:52.479 CONFIG | joint prob: 0.11488748399979107
+10:13:52.483 CONFIG | 5
+10:13:52.483 CONFIG | lost, opponent bid 366
+10:13:52.490 CONFIG | joint prob: 0.06414889724583087
+10:13:52.490 CONFIG | 5
+10:13:52.490 CONFIG | won!
+10:13:52.490 CONFIG | joint prob: 0.08032490829875108
+10:13:52.490 CONFIG | 5
+10:13:52.490 CONFIG | won!
+10:13:52.490 CONFIG | joint prob: 0.0776029175830753
+10:13:52.490 CONFIG | 5
+10:13:52.490 CONFIG | won!
+10:13:52.491 CONFIG | joint prob: 0.0701442642214622
+10:13:52.492 CONFIG | 5
+10:13:52.492 CONFIG | won!
+10:13:52.493 CONFIG | joint prob: 0.13348628829990575
+10:13:52.495 CONFIG | 5
+10:13:52.495 CONFIG | lost, opponent bid 310
+10:13:52.496 CONFIG | joint prob: 0.060596348824917746
+10:13:52.498 CONFIG | 5
+10:13:52.499 CONFIG | won!
+10:13:52.500 CONFIG | joint prob: 0.11042483414102186
+10:13:52.504 CONFIG | 5
+10:13:52.504 CONFIG | won!
+10:13:52.504 CONFIG | joint prob: 0.07495811587891055
+10:13:52.505 CONFIG | 5
+10:13:52.505 CONFIG | won!
+10:13:52.507 CONFIG | joint prob: 0.09507685573865797
+10:13:52.509 CONFIG | 5
+10:13:52.509 CONFIG | lost, opponent bid 494
+10:13:52.511 CONFIG | joint prob: 0.07700796669271763
+10:13:52.512 CONFIG | 5
+10:13:52.512 CONFIG | won!
+10:13:52.514 CONFIG | joint prob: 0.07687447797548522
+10:13:52.515 CONFIG | 5
+10:13:52.515 CONFIG | won!
+10:13:52.519 CONFIG | joint prob: 0.10515949985550735
+10:13:52.524 CONFIG | 5
+10:13:52.524 CONFIG | lost, opponent bid 293
+10:13:52.527 CONFIG | joint prob: 0.11272916078628314
+10:13:52.530 CONFIG | 5
+10:13:52.530 CONFIG | lost, opponent bid 165
+10:13:52.534 CONFIG | joint prob: 0.07745417797709123
+10:13:52.535 CONFIG | 5
+10:13:52.535 CONFIG | won!
+10:13:52.538 CONFIG | joint prob: 0.10531619370427019
+10:13:52.539 CONFIG | 5
+10:13:52.539 CONFIG | won!
+10:13:52.542 CONFIG | joint prob: 0.08933556607661759
+10:13:52.544 CONFIG | 5
+10:13:52.544 CONFIG | lost, opponent bid 173
+10:13:52.547 CONFIG | joint prob: 0.06690499483936173
+10:13:52.548 CONFIG | 5
+10:13:52.548 CONFIG | lost, opponent bid 172
+10:13:52.551 CONFIG | joint prob: 0.08511267196944462
+10:13:52.553 CONFIG | 5
+10:13:52.553 CONFIG | won!
+10:13:52.556 CONFIG | joint prob: 0.09583644613907437
+10:13:52.558 CONFIG | 5
+10:13:52.559 CONFIG | won!
+10:13:52.562 CONFIG | joint prob: 0.07244229470638311
+10:13:52.572 CONFIG | 5
+10:13:52.572 CONFIG | lost, opponent bid 182
+10:13:52.572 CONFIG | joint prob: 0.0
+10:13:52.575 CONFIG | 5
+10:13:52.575 CONFIG | lost, opponent bid 262
+10:13:52.579 CONFIG | joint prob: 0.10615341792126756
+10:13:52.581 CONFIG | 5
+10:13:52.581 CONFIG | won!
+10:13:52.585 CONFIG | joint prob: 0.0
+10:13:52.589 CONFIG | 5
+10:13:52.590 CONFIG | lost, opponent bid 260
+10:13:52.596 CONFIG | joint prob: 0.0892968259545529
+10:13:52.598 CONFIG | 5
+10:13:52.598 CONFIG | won!
+10:13:52.603 CONFIG | joint prob: 0.07317857306079274
+10:13:52.605 CONFIG | 5
+10:13:52.606 CONFIG | lost, opponent bid 185
+10:13:52.609 CONFIG | joint prob: 0.10320232231303321
+10:13:52.616 CONFIG | 5
+10:13:52.617 CONFIG | won!
+10:13:52.627 CONFIG | Wrote tournament/tour3/auction-agent-main-44-test-agent-main-44.xml
+10:13:52.631 INFO | LogistPlatform finished successfully!
