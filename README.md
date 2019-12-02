@@ -4,7 +4,7 @@ Each subdirectory works as an independent solution, except for its usage of the 
 
 The following table summarizes the difference between the four implementations:
 
-![overview_table](/reports/overview_table.png)
+![overview_table](/docs/summary_table.png)
 
 ### Contributors
 * Valentin Kindschi
