@@ -1,0 +1,174 @@
+02:15:27.531 FINE | Run command: java -Xmx1024m -classpath /home/cyril/Documents/intelligent-agents-ex/logist/logist.jar logist.LogistPlatform -o tournament/tour3/auction-agent-main-44-agent-main-44-template.xml -a tournament/tour3/agents.xml config/auction.xml agent-main-44 agent-main-44-template
+02:15:27.653 CONFIG | Reading config/auction.xml
+02:15:27.725 CONFIG | Reading config/settings_auction.xml
+02:15:27.789 CONFIG | Reading config/topology/england.xml
+02:15:27.808 CONFIG | Reading tournament/tour3/agents.xml
+02:15:27.842 CONFIG | 5
+02:15:27.842 CONFIG | won!
+02:15:27.843 CONFIG | 5
+02:15:27.844 CONFIG | won!
+02:15:27.844 CONFIG | 5
+02:15:27.844 CONFIG | won!
+02:15:27.845 CONFIG | 5
+02:15:27.846 CONFIG | won!
+02:15:27.847 CONFIG | 5
+02:15:27.847 CONFIG | won!
+02:15:27.848 CONFIG | 5
+02:15:27.848 CONFIG | won!
+02:15:27.850 CONFIG | 5
+02:15:27.850 CONFIG | won!
+02:15:27.851 CONFIG | 5
+02:15:27.852 CONFIG | won!
+02:15:27.853 CONFIG | 5
+02:15:27.853 CONFIG | lost, opponent bid 2287
+02:15:27.854 CONFIG | 5
+02:15:27.854 CONFIG | won!
+02:15:27.855 CONFIG | 5
+02:15:27.855 CONFIG | won!
+02:15:27.856 CONFIG | 5
+02:15:27.856 CONFIG | won!
+02:15:27.857 CONFIG | 5
+02:15:27.857 CONFIG | won!
+02:15:27.859 CONFIG | 5
+02:15:27.859 CONFIG | won!
+02:15:27.860 CONFIG | 5
+02:15:27.860 CONFIG | won!
+02:15:27.862 CONFIG | 5
+02:15:27.862 CONFIG | won!
+02:15:27.863 CONFIG | 5
+02:15:27.863 CONFIG | won!
+02:15:27.865 CONFIG | 5
+02:15:27.865 CONFIG | won!
+02:15:27.867 CONFIG | 5
+02:15:27.867 CONFIG | won!
+02:15:27.869 CONFIG | 5
+02:15:27.870 CONFIG | won!
+02:15:27.871 CONFIG | 5
+02:15:27.871 CONFIG | won!
+02:15:27.873 CONFIG | 5
+02:15:27.873 CONFIG | won!
+02:15:27.875 CONFIG | 5
+02:15:27.876 CONFIG | won!
+02:15:27.878 CONFIG | 5
+02:15:27.878 CONFIG | won!
+02:15:27.881 CONFIG | 5
+02:15:27.881 CONFIG | won!
+02:15:27.884 CONFIG | 5
+02:15:27.884 CONFIG | won!
+02:15:27.887 CONFIG | 5
+02:15:27.887 CONFIG | won!
+02:15:27.889 CONFIG | 5
+02:15:27.889 CONFIG | won!
+02:15:27.893 CONFIG | 5
+02:15:27.893 CONFIG | won!
+02:15:27.897 CONFIG | 5
+02:15:27.897 CONFIG | won!
+02:15:27.901 CONFIG | 5
+02:15:27.901 CONFIG | won!
+02:15:27.905 CONFIG | 5
+02:15:27.905 CONFIG | won!
+02:15:27.909 CONFIG | 5
+02:15:27.909 CONFIG | won!
+02:15:27.913 CONFIG | 5
+02:15:27.913 CONFIG | won!
+02:15:27.919 CONFIG | 5
+02:15:27.920 CONFIG | won!
+02:15:27.924 CONFIG | 5
+02:15:27.924 CONFIG | won!
+02:15:27.928 CONFIG | 5
+02:15:27.928 CONFIG | won!
+02:15:27.932 CONFIG | 5
+02:15:27.933 CONFIG | lost, opponent bid 1039
+02:15:27.937 CONFIG | 5
+02:15:27.937 CONFIG | won!
+02:15:34.312 CONFIG | 5
+02:15:34.312 CONFIG | won!
+02:15:53.929 CONFIG | Wrote tournament/tour3/auction-agent-main-44-agent-main-44-template.xml
+02:15:53.954 INFO | LogistPlatform finished successfully!
+02:15:53.965 FINE | Run command: java -Xmx1024m -classpath /home/cyril/Documents/intelligent-agents-ex/logist/logist.jar logist.LogistPlatform -o tournament/tour3/auction-agent-main-44-template-agent-main-44.xml -a tournament/tour3/agents.xml config/auction.xml agent-main-44-template agent-main-44
+02:15:54.054 CONFIG | Reading config/auction.xml
+02:15:54.116 CONFIG | Reading config/settings_auction.xml
+02:15:54.177 CONFIG | Reading config/topology/england.xml
+02:15:54.195 CONFIG | Reading tournament/tour3/agents.xml
+02:15:54.232 CONFIG | 5
+02:15:54.232 CONFIG | won!
+02:15:54.234 CONFIG | 5
+02:15:54.234 CONFIG | won!
+02:15:54.237 CONFIG | 5
+02:15:54.237 CONFIG | won!
+02:15:54.238 CONFIG | 5
+02:15:54.238 CONFIG | won!
+02:15:54.240 CONFIG | 5
+02:15:54.240 CONFIG | won!
+02:15:54.241 CONFIG | 5
+02:15:54.242 CONFIG | won!
+02:15:54.244 CONFIG | 5
+02:15:54.244 CONFIG | won!
+02:15:54.246 CONFIG | 5
+02:15:54.246 CONFIG | won!
+02:15:54.248 CONFIG | 5
+02:15:54.249 CONFIG | won!
+02:15:54.251 CONFIG | 5
+02:15:54.252 CONFIG | won!
+02:15:54.255 CONFIG | 5
+02:15:54.255 CONFIG | won!
+02:15:54.256 CONFIG | 5
+02:15:54.256 CONFIG | won!
+02:15:54.257 CONFIG | 5
+02:15:54.257 CONFIG | won!
+02:15:54.258 CONFIG | 5
+02:15:54.258 CONFIG | lost, opponent bid 1044
+02:15:54.259 CONFIG | 5
+02:15:54.259 CONFIG | won!
+02:15:54.260 CONFIG | 5
+02:15:54.261 CONFIG | won!
+02:15:54.261 CONFIG | 5
+02:15:54.262 CONFIG | won!
+02:15:54.263 CONFIG | 5
+02:15:54.263 CONFIG | won!
+02:15:54.264 CONFIG | 5
+02:15:54.264 CONFIG | won!
+02:15:54.266 CONFIG | 5
+02:15:54.266 CONFIG | won!
+02:15:54.268 CONFIG | 5
+02:15:54.268 CONFIG | won!
+02:15:54.270 CONFIG | 5
+02:15:54.270 CONFIG | won!
+02:15:54.273 CONFIG | 5
+02:15:54.273 CONFIG | won!
+02:15:54.275 CONFIG | 5
+02:15:54.276 CONFIG | won!
+02:15:54.278 CONFIG | 5
+02:15:54.278 CONFIG | won!
+02:15:54.281 CONFIG | 5
+02:15:54.281 CONFIG | won!
+02:15:54.284 CONFIG | 5
+02:15:54.284 CONFIG | won!
+02:15:54.287 CONFIG | 5
+02:15:54.288 CONFIG | won!
+02:15:54.291 CONFIG | 5
+02:15:54.291 CONFIG | won!
+02:15:54.293 CONFIG | 5
+02:15:54.293 CONFIG | won!
+02:15:54.296 CONFIG | 5
+02:15:54.296 CONFIG | won!
+02:15:54.299 CONFIG | 5
+02:15:54.299 CONFIG | won!
+02:15:54.302 CONFIG | 5
+02:15:54.302 CONFIG | lost, opponent bid 372
+02:15:54.304 CONFIG | 5
+02:15:54.304 CONFIG | won!
+02:15:54.307 CONFIG | 5
+02:15:54.307 CONFIG | won!
+02:15:54.309 CONFIG | 5
+02:15:54.309 CONFIG | won!
+02:15:54.312 CONFIG | 5
+02:15:54.312 CONFIG | won!
+02:15:54.315 CONFIG | 5
+02:15:54.315 CONFIG | won!
+02:15:54.318 CONFIG | 5
+02:15:54.318 CONFIG | won!
+02:15:56.662 CONFIG | 5
+02:15:56.662 CONFIG | won!
+02:16:09.473 CONFIG | Wrote tournament/tour3/auction-agent-main-44-template-agent-main-44.xml
+02:16:09.527 INFO | LogistPlatform finished successfully!
